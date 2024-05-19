@@ -55,8 +55,6 @@ public class ModuleIOSparkMax implements ModuleIO {
   private final Queue<Double> drivePositionQueue;
   private final Queue<Double> turnPositionQueue;
 
-  private Double turnDouble = null;
-
   private final boolean isTurnMotorInverted = true;
   private final Rotation2d absoluteEncoderOffset;
 
@@ -147,17 +145,15 @@ public class ModuleIOSparkMax implements ModuleIO {
         SparkMaxOdometryThread.getInstance()
             .registerSignal(
                 () -> {
-                  double value = turnRelativeEncoder.getPosition();
+                  Double value = cancoder.getAbsolutePosition().getValue();
                   if (turnSparkMax.getLastError() == REVLibError.kOk) {
                     return OptionalDouble.of(value);
                   } else {
                     return OptionalDouble.empty();
                   }
                 });
-    
-    BaseStatusSignal.setUpdateFrequencyForAll(
-      50.0,
-      turnAbsolutePosition);
+
+    BaseStatusSignal.setUpdateFrequencyForAll(50.0, turnAbsolutePosition);
     driveSparkMax.burnFlash();
     turnSparkMax.burnFlash();
   }
@@ -176,7 +172,6 @@ public class ModuleIOSparkMax implements ModuleIO {
     inputs.turnAbsolutePosition =
         Rotation2d.fromRotations(turnAbsolutePosition.getValueAsDouble())
             .minus(absoluteEncoderOffset);
-    turnDouble = turnAbsolutePosition.getValueAsDouble();
     inputs.turnPosition =
         Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / TURN_GEAR_RATIO);
     inputs.turnVelocityRadPerSec =
@@ -192,9 +187,9 @@ public class ModuleIOSparkMax implements ModuleIO {
             .mapToDouble((Double value) -> Units.rotationsToRadians(value) / DRIVE_GEAR_RATIO)
             .toArray();
     inputs.odometryTurnPositions =
-        turnPositionQueue.stream()
-            .map((Double value) -> Rotation2d.fromRotations(value / TURN_GEAR_RATIO))
-            .toArray(Rotation2d[]::new);
+      turnPositionQueue.stream()
+        .map(Rotation2d::fromRotations)
+        .toArray(Rotation2d[]::new);
     timestampQueue.clear();
     drivePositionQueue.clear();
     turnPositionQueue.clear();
