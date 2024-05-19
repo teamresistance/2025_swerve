@@ -25,6 +25,7 @@ import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.Constants;
 import java.util.OptionalDouble;
 import java.util.Queue;
 
@@ -42,8 +43,8 @@ import java.util.Queue;
  */
 public class ModuleIOSparkMax implements ModuleIO {
   // Gear ratios for WCP SwerveX, adjust as necessary
-  private static final double DRIVE_GEAR_RATIO = (14.0 / 44.0) * (28.0 / 18.0) * (15.0 / 45.0);
-  private static final double TURN_GEAR_RATIO = (24.0 / 8) * (72.0 / 14);
+  private static final double DRIVE_GEAR_RATIO = Constants.DRIVE_GEAR_RATIO;
+  private static final double TURN_GEAR_RATIO = Constants.TURN_GEAR_RATIO;
 
   private final CANSparkMax driveSparkMax;
   private final CANSparkMax turnSparkMax;
@@ -63,33 +64,32 @@ public class ModuleIOSparkMax implements ModuleIO {
   public ModuleIOSparkMax(int index) {
     switch (index) {
       case 0: // FL
-        driveSparkMax = new CANSparkMax(25, MotorType.kBrushless);
-        turnSparkMax = new CANSparkMax(24, MotorType.kBrushless);
-        cancoder = new CANcoder(33);
+        driveSparkMax = new CANSparkMax(Constants.DRIVE_SPARK_MAX_FL, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(Constants.TURN_SPARK_MAX_FL, MotorType.kBrushless);
+        cancoder = new CANcoder(Constants.CANCODER_FL);
         absoluteEncoderOffset =
-            new Rotation2d(Units.rotationsToRadians(0.668)); // MUST BE CALIBRATED
+            new Rotation2d(Units.rotationsToRadians(Constants.ABSOLUTE_ENCODER_OFFSET_FL));
         break;
       case 1: // FR
-        driveSparkMax = new CANSparkMax(27, MotorType.kBrushless);
-        turnSparkMax = new CANSparkMax(26, MotorType.kBrushless);
-        cancoder = new CANcoder(30);
-        absoluteEncoderOffset = new Rotation2d(Units.rotationsToRadians(0.780 - 0.5));
-
+        driveSparkMax = new CANSparkMax(Constants.DRIVE_SPARK_MAX_FR, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(Constants.TURN_SPARK_MAX_FR, MotorType.kBrushless);
+        cancoder = new CANcoder(Constants.CANCODER_FR);
+        absoluteEncoderOffset =
+            new Rotation2d(Units.rotationsToRadians(Constants.ABSOLUTE_ENCODER_OFFSET_FR));
         break;
       case 2: // BL
-        driveSparkMax = new CANSparkMax(23, MotorType.kBrushless);
-        turnSparkMax = new CANSparkMax(22, MotorType.kBrushless);
-        cancoder = new CANcoder(32);
+        driveSparkMax = new CANSparkMax(Constants.DRIVE_SPARK_MAX_BL, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(Constants.TURN_SPARK_MAX_BL, MotorType.kBrushless);
+        cancoder = new CANcoder(Constants.CANCODER_BL);
         absoluteEncoderOffset =
-            new Rotation2d(Units.rotationsToRadians(0.054)); // MUST BE CALIBRATED
+            new Rotation2d(Units.rotationsToRadians(Constants.ABSOLUTE_ENCODER_OFFSET_BL));
         break;
       case 3: // BR
-        driveSparkMax = new CANSparkMax(21, MotorType.kBrushless);
-        turnSparkMax = new CANSparkMax(20, MotorType.kBrushless);
-
-        cancoder = new CANcoder(31);
+        driveSparkMax = new CANSparkMax(Constants.DRIVE_SPARK_MAX_BR, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(Constants.TURN_SPARK_MAX_BR, MotorType.kBrushless);
+        cancoder = new CANcoder(Constants.CANCODER_BR);
         absoluteEncoderOffset =
-            new Rotation2d(Units.rotationsToRadians(0.646)); // MUST BE CALIBRATED
+            new Rotation2d(Units.rotationsToRadians(Constants.ABSOLUTE_ENCODER_OFFSET_BR));
         break;
       default:
         throw new RuntimeException("Invalid module index");
@@ -187,9 +187,7 @@ public class ModuleIOSparkMax implements ModuleIO {
             .mapToDouble((Double value) -> Units.rotationsToRadians(value) / DRIVE_GEAR_RATIO)
             .toArray();
     inputs.odometryTurnPositions =
-      turnPositionQueue.stream()
-        .map(Rotation2d::fromRotations)
-        .toArray(Rotation2d[]::new);
+        turnPositionQueue.stream().map(Rotation2d::fromRotations).toArray(Rotation2d[]::new);
     timestampQueue.clear();
     drivePositionQueue.clear();
     turnPositionQueue.clear();
