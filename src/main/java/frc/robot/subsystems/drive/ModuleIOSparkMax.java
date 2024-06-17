@@ -101,11 +101,11 @@ public class ModuleIOSparkMax implements ModuleIO {
 		
 		turnAbsolutePosition = cancoder.getAbsolutePosition();
 		
-		driveSparkMax.restoreFactoryDefaults();
+		driveSparkMax.restoreFactoryDefaults(); // got reset here
 		turnSparkMax.restoreFactoryDefaults();
 		
 		if (index == 3) {
-			driveSparkMax.setInverted(true);
+			driveSparkMax.setInverted(true); // after reset, new fix to apply module specific changes
 		}
 		
 		driveSparkMax.setCANTimeout(250);
