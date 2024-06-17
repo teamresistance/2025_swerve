@@ -28,7 +28,7 @@ public final class Constants {
 	// Modes
 	public static final Mode currentMode = Mode.REAL;
 	// Deadband
-	public static final double DEADBAND = 0.1;
+	public static final double DEADBAND = 0.15;
 	// Robot dimensions and speed
 	public static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
 	public static final double TRACK_WIDTH_X =
