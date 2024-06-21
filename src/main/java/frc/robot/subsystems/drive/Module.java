@@ -50,7 +50,7 @@ public class Module {
 					new SimpleMotorFeedforward(
 						0.02, 0.2); // (0.1, 0.13);  // BRO THEY ARE ACTING UP, i WANT TO NOT MOVE
 				driveFeedback = new PIDController(0.001, 0, 0); // (0.05, 0.0, 0.0);
-				turnFeedback = new PIDController(2.0, 0.0, 0.0); // ! TODO: Tune
+				turnFeedback = new PIDController(3.4, 0.0, 0.0); // ! TODO: Tune
 				break;
 			case SIM:
 				driveFeedforward = new SimpleMotorFeedforward(0.0, 0.13);

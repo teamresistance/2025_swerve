@@ -30,9 +30,9 @@ public final class Constants {
 	// Deadband
 	public static final double DEADBAND = 0.15;
 	// Robot dimensions and speed
-	public static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
+	public static final double MAX_LINEAR_SPEED = Units.feetToMeters(13.884);
 	public static final double TRACK_WIDTH_X =
-		Units.inchesToMeters(20.25); // X is perpendicular to the front of the robot
+		Units.inchesToMeters(19.57); // X is perpendicular to the front of the robot
 	public static final double TRACK_WIDTH_Y =
 		Units.inchesToMeters(24.5); // Y is parallel to the front of the robot
 	public static final double DRIVE_GEAR_RATIO = (14.0 / 44.0) * (28.0 / 18.0) * (15.0 / 45.0);
@@ -58,7 +58,7 @@ public final class Constants {
 	public static final int PIGEON2_CAN_ID = 26;
 	// Odometry
 	public static final double ODOMETRY_FREQUENCY = 250.0;
-	public static final double WHEEL_RADIUS = Units.inchesToMeters(2.0) * 0.9442667069;
+	public static final double WHEEL_RADIUS = Units.inchesToMeters(2.05);
 	public enum Mode {
 		/**
 		 * Running on a real robot.
