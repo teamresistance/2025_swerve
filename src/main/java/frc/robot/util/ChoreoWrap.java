@@ -63,7 +63,7 @@ public class ChoreoWrap {
                           isFlipped
                               ? drive.getRotation().plus(new Rotation2d(Math.PI))
                               : drive.getRotation())),
-              () -> false,
+              () -> Constants.FIELD_MIRROR,
               drive);
       System.out.println("Choreo: " + name);
       autos.addOption(

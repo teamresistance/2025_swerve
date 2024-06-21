@@ -36,7 +36,7 @@ public final class Constants {
   public static final double TRACK_WIDTH_Y =
       Units.inchesToMeters(24.5); // Y is parallel to the front of the robot
   public static final double DRIVE_GEAR_RATIO = (14.0 / 44.0) * (28.0 / 18.0) * (15.0 / 45.0);
-  public static final double TURN_GEAR_RATIO = 396.0/35.0;//(24.0 / 8) * (72.0 / 14);
+  public static final double TURN_GEAR_RATIO = 396.0 / 35.0; // (24.0 / 8) * (72.0 / 14);
   // Motor and encoder constants
   public static final int DRIVE_SPARK_MAX_FL = 24;
   public static final int TURN_SPARK_MAX_FL = 25;
@@ -59,6 +59,7 @@ public final class Constants {
   // Odometry
   public static final double ODOMETRY_FREQUENCY = 250.0;
   public static final double WHEEL_RADIUS = Units.inchesToMeters(2.05);
+  public static final boolean FIELD_MIRROR = false;
 
   public enum Mode {
     /** Running on a real robot. */
