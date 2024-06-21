@@ -74,7 +74,7 @@ public class ChoreoWrap {
               drive.run(
                   () ->
                       drive.runVelocity(
-                          ChassisSpeeds.fromFieldRelativeSpeeds(
+                          ChassisSpeeds.fromRobotRelativeSpeeds(
                               0,
                               0,
                               0,

@@ -25,10 +25,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -192,10 +189,6 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  public void resetOdometry(Pose2d pose) {
-    poseEstimator.resetPosition(getRotation(), getModulePositions(), pose);
-  }
-
   /**
    * Runs the drive at the desired velocity.
    *
@@ -275,6 +268,10 @@ public class Drive extends SubsystemBase {
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+  }
+  
+  public void resetOdometry(Pose2d pose) {
+    setPose(pose);
   }
 
   /** Returns the current odometry rotation. */
