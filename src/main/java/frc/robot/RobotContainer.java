@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.*;
+import frc.robot.util.ChoreoWrap;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
@@ -131,6 +132,8 @@ public class RobotContainer {
 		//        "Flywheel SysId (Dynamic Reverse)",
 		// flywheel.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 		
+		ChoreoWrap.addChoreoAutos(autoChooser,drive);
+		
 		// Configure the button bindings
 		configureButtonBindings();
 	}
@@ -149,15 +152,15 @@ public class RobotContainer {
 				() -> -controller.getLeftX(),
 				() -> -controller.getRightX()));
 		controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-		controller
-			.b()
-			.onTrue(
-				Commands.runOnce(
-						() ->
-							drive.setPose(
-								new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-						drive)
-					.ignoringDisable(true));
+//		controller
+//			.b()
+//			.onTrue(
+//				Commands.runOnce(
+//						() ->
+//							drive.setPose(
+//								new Pose2d(drive.getPose().getTranslation(), new Rotation2d())), // reset gyro
+//						drive)
+//					.ignoringDisable(true));
 		//    controller
 		//        .a()
 		//        .whileTrue(

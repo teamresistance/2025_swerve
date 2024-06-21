@@ -31,10 +31,8 @@ public final class Constants {
 	public static final double DEADBAND = 0.15;
 	// Robot dimensions and speed
 	public static final double MAX_LINEAR_SPEED = Units.feetToMeters(13.884);
-	public static final double TRACK_WIDTH_X =
-		Units.inchesToMeters(19.57); // X is perpendicular to the front of the robot
-	public static final double TRACK_WIDTH_Y =
-		Units.inchesToMeters(24.5); // Y is parallel to the front of the robot
+	public static final double TRACK_WIDTH_X = Units.inchesToMeters(19.57); // X is perpendicular to the front of the robot
+	public static final double TRACK_WIDTH_Y = Units.inchesToMeters(24.5); // Y is parallel to the front of the robot
 	public static final double DRIVE_GEAR_RATIO = (14.0 / 44.0) * (28.0 / 18.0) * (15.0 / 45.0);
 	public static final double TURN_GEAR_RATIO = (24.0 / 8) * (72.0 / 14);
 	// Motor and encoder constants
@@ -59,6 +57,7 @@ public final class Constants {
 	// Odometry
 	public static final double ODOMETRY_FREQUENCY = 250.0;
 	public static final double WHEEL_RADIUS = Units.inchesToMeters(2.05);
+	
 	public enum Mode {
 		/**
 		 * Running on a real robot.
@@ -74,5 +73,11 @@ public final class Constants {
 		 * Replaying from a log file.
 		 */
 		REPLAY
+	}
+	
+	public static class AutoConstants {
+		public static double kPThetaController = 0.1;
+		public static double kPXController = 0.1;
+		public static double kPYController = 0.1;
 	}
 }

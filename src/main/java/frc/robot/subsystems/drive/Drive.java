@@ -139,6 +139,8 @@ public class Drive extends SubsystemBase {
 		};
 	}
 	
+	
+	
 	public void periodic() {
 		odometryLock.lock(); // Prevents odometry updates while reading data
 		gyroIO.updateInputs(gyroInputs);
@@ -194,6 +196,13 @@ public class Drive extends SubsystemBase {
 			// Apply update
 			poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
 		}
+	}
+	
+	public void resetOdometry(Pose2d pose) {
+		poseEstimator.resetPosition(
+			getRotation(),
+			getModulePositions(),
+			pose);
 	}
 	
 	/**
