@@ -103,9 +103,9 @@ public class ModuleIOSparkMax implements ModuleIO {
     driveSparkMax.restoreFactoryDefaults(); // got reset here
     turnSparkMax.restoreFactoryDefaults();
 
-    if (index == 3) {
-      driveSparkMax.setInverted(true); // after reset, new fix to apply module specific changes
-    }
+    // if (index == 3) {
+    //   driveSparkMax.setInverted(true); // after reset, new fix to apply module specific changes
+    // }
 
     driveSparkMax.setCANTimeout(250);
     turnSparkMax.setCANTimeout(250);

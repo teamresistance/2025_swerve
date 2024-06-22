@@ -269,7 +269,7 @@ public class Drive extends SubsystemBase {
   public void setPose(Pose2d pose) {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
   }
-  
+
   public void resetOdometry(Pose2d pose) {
     setPose(pose);
   }

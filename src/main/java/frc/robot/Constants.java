@@ -35,7 +35,7 @@ public final class Constants {
       Units.inchesToMeters(19.57); // X is perpendicular to the front of the robot
   public static final double TRACK_WIDTH_Y =
       Units.inchesToMeters(24.5); // Y is parallel to the front of the robot
-  public static final double DRIVE_GEAR_RATIO = (14.0 / 44.0) * (28.0 / 18.0) * (15.0 / 45.0);
+  public static final double DRIVE_GEAR_RATIO = 60.0 / 9.0;
   public static final double TURN_GEAR_RATIO = 396.0 / 35.0; // (24.0 / 8) * (72.0 / 14);
   // Motor and encoder constants
   public static final int DRIVE_SPARK_MAX_FL = 24;
@@ -53,7 +53,7 @@ public final class Constants {
   public static final int DRIVE_SPARK_MAX_BR = 21;
   public static final int TURN_SPARK_MAX_BR = 20;
   public static final int CANCODER_BR = 31;
-  public static final double ABSOLUTE_ENCODER_OFFSET_BR = 0.646;
+  public static final double ABSOLUTE_ENCODER_OFFSET_BR = 0.646 + 0.5;
   // Gyro
   public static final int PIGEON2_CAN_ID = 26;
   // Odometry
