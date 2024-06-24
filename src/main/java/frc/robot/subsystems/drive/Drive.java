@@ -143,7 +143,11 @@ public class Drive extends SubsystemBase {
     for (var module : modules) {
       module.periodic();
     }
-
+    SwerveModuleState[] debug_odetry = new SwerveModuleState[4];
+    for (int i = 0; i < 4; i++) {
+      debug_odetry[i] = new SwerveModuleState(0, modules[i].odometryPositions[0].angle);
+    }
+    Logger.recordOutput("SwerveStates/odometry", debug_odetry);
     // Stop moving when disabled
     if (DriverStation.isDisabled()) {
       for (var module : modules) {

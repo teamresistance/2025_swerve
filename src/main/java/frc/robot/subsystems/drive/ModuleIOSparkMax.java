@@ -72,7 +72,7 @@ public class ModuleIOSparkMax implements ModuleIO {
         break;
       case 1: // FR
         driveSparkMax = new CANSparkMax(Constants.DRIVE_SPARK_MAX_FR, MotorType.kBrushless);
-        driveSparkMax.setInverted(true);
+        driveSparkMax.setInverted(true); // this does not matter, gets reset anyways
         turnSparkMax = new CANSparkMax(Constants.TURN_SPARK_MAX_FR, MotorType.kBrushless);
         cancoder = new CANcoder(Constants.CANCODER_FR);
         absoluteEncoderOffset =
@@ -102,10 +102,6 @@ public class ModuleIOSparkMax implements ModuleIO {
 
     driveSparkMax.restoreFactoryDefaults(); // got reset here
     turnSparkMax.restoreFactoryDefaults();
-
-    // if (index == 3) {
-    //   driveSparkMax.setInverted(true); // after reset, new fix to apply module specific changes
-    // }
 
     driveSparkMax.setCANTimeout(250);
     turnSparkMax.setCANTimeout(250);
@@ -150,8 +146,8 @@ public class ModuleIOSparkMax implements ModuleIO {
         SparkMaxOdometryThread.getInstance()
             .registerSignal(
                 () -> {
-                  Double value = cancoder.getAbsolutePosition().getValue();
-                  if (turnSparkMax.getLastError() == REVLibError.kOk) {
+                  double value = turnRelativeEncoder.getPosition() / TURN_GEAR_RATIO;
+                  if (driveSparkMax.getLastError() == REVLibError.kOk) {
                     return OptionalDouble.of(value);
                   } else {
                     return OptionalDouble.empty();
