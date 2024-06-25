@@ -60,6 +60,13 @@ public final class Constants {
   public static final double ODOMETRY_FREQUENCY = 250.0;
   public static final double WHEEL_RADIUS = Units.inchesToMeters(2.05) * 1 / 1.1132075472;
   public static final boolean FIELD_MIRROR = false;
+  public static boolean tuningMode = true;
+  public static double drivekP;
+  public static double drivekD;
+  public static double ffkS;
+  public static double ffkV;
+  public static double turnkP;
+  public static double turnkD;
 
   public enum Mode {
     /** Running on a real robot. */

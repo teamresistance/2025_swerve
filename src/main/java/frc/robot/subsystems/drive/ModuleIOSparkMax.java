@@ -65,7 +65,7 @@ public class ModuleIOSparkMax implements ModuleIO {
     switch (index) {
       case 0: // FL
         driveSparkMax = new CANSparkMax(Constants.DRIVE_SPARK_MAX_FL, MotorType.kBrushless);
-        turnSparkMax  = new CANSparkMax(Constants.TURN_SPARK_MAX_FL, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(Constants.TURN_SPARK_MAX_FL, MotorType.kBrushless);
         cancoder = new CANcoder(Constants.CANCODER_FL);
         absoluteEncoderOffset =
             new Rotation2d(Units.rotationsToRadians(Constants.ABSOLUTE_ENCODER_OFFSET_FL));
@@ -73,21 +73,21 @@ public class ModuleIOSparkMax implements ModuleIO {
       case 1: // FR
         driveSparkMax = new CANSparkMax(Constants.DRIVE_SPARK_MAX_FR, MotorType.kBrushless);
         driveSparkMax.setInverted(true); // this does not matter, gets reset anyways
-        turnSparkMax  = new CANSparkMax(Constants.TURN_SPARK_MAX_FR, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(Constants.TURN_SPARK_MAX_FR, MotorType.kBrushless);
         cancoder = new CANcoder(Constants.CANCODER_FR);
         absoluteEncoderOffset =
             new Rotation2d(Units.rotationsToRadians(Constants.ABSOLUTE_ENCODER_OFFSET_FR));
         break;
       case 2: // BL
         driveSparkMax = new CANSparkMax(Constants.DRIVE_SPARK_MAX_BL, MotorType.kBrushless);
-        turnSparkMax  = new CANSparkMax(Constants.TURN_SPARK_MAX_BL, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(Constants.TURN_SPARK_MAX_BL, MotorType.kBrushless);
         cancoder = new CANcoder(Constants.CANCODER_BL);
         absoluteEncoderOffset =
             new Rotation2d(Units.rotationsToRadians(Constants.ABSOLUTE_ENCODER_OFFSET_BL));
         break;
       case 3: // BR
         driveSparkMax = new CANSparkMax(Constants.DRIVE_SPARK_MAX_BR, MotorType.kBrushless);
-        turnSparkMax  = new CANSparkMax(Constants.TURN_SPARK_MAX_BR, MotorType.kBrushless);
+        turnSparkMax = new CANSparkMax(Constants.TURN_SPARK_MAX_BR, MotorType.kBrushless);
         cancoder = new CANcoder(Constants.CANCODER_BR);
         absoluteEncoderOffset =
             new Rotation2d(Units.rotationsToRadians(Constants.ABSOLUTE_ENCODER_OFFSET_BR));
