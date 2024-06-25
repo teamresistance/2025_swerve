@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants;
+import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class Module {
@@ -29,13 +30,26 @@ public class Module {
   private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
   private final int index;
 
-  private final SimpleMotorFeedforward driveFeedforward;
-  private final PIDController driveFeedback;
-  private final PIDController turnFeedback;
+  private SimpleMotorFeedforward driveFeedforward;
+  private PIDController driveFeedback;
+  private PIDController turnFeedback;
   private Rotation2d angleSetpoint = null; // Setpoint for closed loop control, null for open loop
   private Double speedSetpoint = null; // Setpoint for closed loop control, null for open loop
   private Rotation2d turnRelativeOffset = null; // Relative + Offset = Absolute
   public SwerveModulePosition[] odometryPositions = new SwerveModulePosition[] {};
+
+  private static final LoggedTunableNumber drivekP =
+      new LoggedTunableNumber("Drive/Module/DrivekP", Constants.drivekP);
+  private static final LoggedTunableNumber drivekD =
+      new LoggedTunableNumber("Drive/Module/DrivekD", Constants.drivekD);
+  private static final LoggedTunableNumber drivekS =
+      new LoggedTunableNumber("Drive/Module/DrivekS", Constants.ffkS);
+  private static final LoggedTunableNumber drivekV =
+      new LoggedTunableNumber("Drive/Module/DrivekV", Constants.ffkV);
+  private static final LoggedTunableNumber turnkP =
+      new LoggedTunableNumber("Drive/Module/TurnkP", Constants.turnkP);
+  private static final LoggedTunableNumber turnkD =
+      new LoggedTunableNumber("Drive/Module/TurnkD", Constants.turnkD);
 
   public Module(ModuleIO io, int index) {
     this.io = io;
@@ -74,16 +88,36 @@ public class Module {
    */
   public void updateInputs() {
     io.updateInputs(inputs);
+
+    // Update ff and controllers
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> driveFeedforward = new SimpleMotorFeedforward(drivekS.get(), drivekV.get(), 0),
+        drivekS,
+        drivekV);
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> driveFeedback = new PIDController(drivekP.get(), 0, drivekD.get()),
+        drivekP,
+        drivekD);
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> turnFeedback = new PIDController(turnkP.get(), 0, turnkD.get()),
+        turnkP,
+        turnkD);
   }
 
   public void periodic() {
+
     Logger.processInputs("Drive/Module" + index, inputs);
 
     // On first cycle, reset relative turn encoder
     // Wait until absolute angle is nonzero in case it wasn't initialized yet
     if (turnRelativeOffset == null && inputs.turnAbsolutePosition.getRadians() != 0.0) {
       turnRelativeOffset =
-          new Rotation2d(0); // inputs.turnAbsolutePosition.minus(inputs.turnPosition); // this is because we are just using absolute odometry turns
+          new Rotation2d(
+              0); // inputs.turnAbsolutePosition.minus(inputs.turnPosition); // this is because we
+      // are just using absolute odometry turns
     }
 
     // Run closed loop turn control

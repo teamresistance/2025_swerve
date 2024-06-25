@@ -56,13 +56,10 @@ public class ChoreoWrap {
               thetaController,
               (ChassisSpeeds speeds) ->
                   drive.runVelocity(
-                      ChassisSpeeds.fromRobotRelativeSpeeds(
+                      new ChassisSpeeds(
                           speeds.vxMetersPerSecond,
                           speeds.vyMetersPerSecond,
-                          speeds.omegaRadiansPerSecond,
-                          isFlipped
-                              ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                              : drive.getRotation())),
+                          speeds.omegaRadiansPerSecond)),
               () -> Constants.FIELD_MIRROR,
               drive);
       System.out.println("Choreo: " + name);
