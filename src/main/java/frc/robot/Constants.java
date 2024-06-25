@@ -58,7 +58,7 @@ public final class Constants {
   public static final int PIGEON2_CAN_ID = 26;
   // Odometry
   public static final double ODOMETRY_FREQUENCY = 250.0;
-  public static final double WHEEL_RADIUS = Units.inchesToMeters(2.05);
+  public static final double WHEEL_RADIUS = Units.inchesToMeters(2.05) * 1 / 1.1132075472;
   public static final boolean FIELD_MIRROR = false;
 
   public enum Mode {
