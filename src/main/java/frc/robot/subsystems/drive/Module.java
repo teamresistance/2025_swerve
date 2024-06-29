@@ -62,9 +62,11 @@ public class Module {
       case REPLAY:
         driveFeedforward =
             new SimpleMotorFeedforward(
-                0.02, 0.2); // (0.1, 0.13);  // BRO THEY ARE ACTING UP, i WANT TO NOT MOVE
-        driveFeedback = new PIDController(0.001, 0, 0); // (0.05, 0.0, 0.0);
-        turnFeedback = new PIDController(5.0, 0.0, 0.0); // ! TODO: Tune
+                drivekS.get(),
+                drivekV.get(),
+                0); // (0.1, 0.13);  // BRO THEY ARE ACTING UP, i WANT TO NOT MOVE
+        driveFeedback = new PIDController(drivekP.get(), 0, drivekD.get()); // (0.05, 0.0, 0.0);
+        turnFeedback = new PIDController(turnkP.get(), 0, turnkD.get()); // ! TODO: Tune
         break;
       case SIM:
         driveFeedforward = new SimpleMotorFeedforward(0.0, 0.13);
@@ -89,22 +91,22 @@ public class Module {
   public void updateInputs() {
     io.updateInputs(inputs);
 
-    // Update ff and controllers
-    LoggedTunableNumber.ifChanged(
-        hashCode(),
-        () -> driveFeedforward = new SimpleMotorFeedforward(drivekS.get(), drivekV.get(), 0),
-        drivekS,
-        drivekV);
-    LoggedTunableNumber.ifChanged(
-        hashCode(),
-        () -> driveFeedback = new PIDController(drivekP.get(), 0, drivekD.get()),
-        drivekP,
-        drivekD);
-    LoggedTunableNumber.ifChanged(
-        hashCode(),
-        () -> turnFeedback = new PIDController(turnkP.get(), 0, turnkD.get()),
-        turnkP,
-        turnkD);
+    //    // Update ff and controllers
+    //    LoggedTunableNumber.ifChanged(
+    //        hashCode(),
+    //        () -> driveFeedforward = new SimpleMotorFeedforward(drivekS.get(), drivekV.get(), 0),
+    //        drivekS,
+    //        drivekV);
+    //    LoggedTunableNumber.ifChanged(
+    //        hashCode(),
+    //        () -> driveFeedback = new PIDController(drivekP.get(), 0, drivekD.get()),
+    //        drivekP,
+    //        drivekD);
+    //    LoggedTunableNumber.ifChanged(
+    //        hashCode(),
+    //        () -> turnFeedback = new PIDController(turnkP.get(), 0, turnkD.get()),
+    //        turnkP,
+    //        turnkD);
   }
 
   public void periodic() {

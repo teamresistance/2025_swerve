@@ -30,7 +30,7 @@ public final class Constants {
   // Deadband
   public static final double DEADBAND = 0.15;
   // Robot dimensions and speed
-  public static final double MAX_LINEAR_SPEED = Units.feetToMeters(13.884);
+  public static final double MAX_LINEAR_SPEED = Units.feetToMeters(11.339);
   public static final double TRACK_WIDTH_X =
       Units.inchesToMeters(19.57); // X is perpendicular to the front of the robot
   public static final double TRACK_WIDTH_Y =
@@ -61,12 +61,12 @@ public final class Constants {
   public static final double WHEEL_RADIUS = Units.inchesToMeters(2.05) * 1 / 1.1132075472;
   public static final boolean FIELD_MIRROR = false;
   public static boolean tuningMode = true;
-  public static double drivekP;
-  public static double drivekD;
-  public static double ffkS;
-  public static double ffkV;
-  public static double turnkP;
-  public static double turnkD;
+  public static double drivekP = 0.001;
+  public static double drivekD = 0.0;
+  public static double ffkS = 0.02;
+  public static double ffkV = 0.2;
+  public static double turnkP = 4.0;
+  public static double turnkD = 0.0;
 
   public enum Mode {
     /** Running on a real robot. */
@@ -80,8 +80,8 @@ public final class Constants {
   }
 
   public static class AutoConstants {
-    public static double kPThetaController = 1;
-    public static double kPXController = 1;
-    public static double kPYController = 1;
+    public static double kPThetaController = 5.0;
+    public static double kPXController = 1.0;
+    public static double kPYController = 1.0;
   }
 }
