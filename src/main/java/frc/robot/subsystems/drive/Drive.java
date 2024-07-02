@@ -1,15 +1,12 @@
-// Copyright 2021-2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 Team 86
+ *
+ * https://github.com/teamresistance
+ *
+ * More details provided in license files
+ */
 
 package frc.robot.subsystems.drive;
 
@@ -20,11 +17,9 @@ import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -120,6 +115,11 @@ public class Drive extends SubsystemBase {
                 },
                 null,
                 this));
+
+    // Create a vector with 3 elements, all initialized to zero
+    var visionMeasurementStdDevs = VecBuilder.fill(1.0, 1.0, 1.0);
+    // Sets how much the drivetrain pose estimator trusts the vision pose estimates
+    poseEstimator.setVisionMeasurementStdDevs(visionMeasurementStdDevs);
   }
 
   /** Returns an array of module translations. */

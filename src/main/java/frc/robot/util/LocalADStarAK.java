@@ -1,3 +1,13 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 Team 86
+ *
+ * https://github.com/teamresistance
+ *
+ * More details provided in license files
+ */
+
 package frc.robot.util;
 
 import com.pathplanner.lib.path.GoalEndState;

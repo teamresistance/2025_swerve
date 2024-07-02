@@ -1,19 +1,19 @@
-// Copyright 2021-2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
+/*
+ * MIT License
+ *
+ * Copyright (c) 2025 Team 86
+ *
+ * https://github.com/teamresistance
+ *
+ * More details provided in license files
+ */
 
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.*;
+import frc.robot.subsystems.vision.Vision;
 import frc.robot.util.ChoreoWrap;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
@@ -35,6 +36,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final Vision vision;
   //  private final Flywheel flywheel;
 
   // Controller
@@ -47,22 +49,17 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Instantiate subsystems
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
-        drive =
+        this.drive =
             new Drive(
                 new GyroIOPigeon2(false),
                 new ModuleIOSparkMax(0),
                 new ModuleIOSparkMax(1),
                 new ModuleIOSparkMax(2),
                 new ModuleIOSparkMax(3));
-        // drive = new Drive(
-        // new GyroIOPigeon2(true),
-        // new ModuleIOTalonFX(0),
-        // new ModuleIOTalonFX(1),
-        // new ModuleIOTalonFX(2),
-        // new ModuleIOTalonFX(3));
         // flywheel = new Flywheel(new FlywheelIOTalonFX());
         break;
 
@@ -75,6 +72,7 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
+
         break;
 
       default:
@@ -96,6 +94,7 @@ public class RobotContainer {
     //                () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop,
     // flywheel)
     //            .withTimeout(5.0));
+
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
@@ -123,6 +122,15 @@ public class RobotContainer {
     // flywheel.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     ChoreoWrap.addChoreoAutos(autoChooser, drive);
+
+    this.vision =
+        new Vision(
+            new Transform3d[] {
+              new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0)), // cam0
+              new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0)) // cam1
+            },
+            new String[] {"cam0", "cam1"},
+            drive);
 
     // Configure the button bindings
     configureButtonBindings();
