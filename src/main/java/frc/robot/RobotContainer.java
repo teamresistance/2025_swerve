@@ -173,7 +173,7 @@ public class RobotContainer {
 //  }
   
   private void configureButtonBindings() {
-    drive.setDefaultCommand(DriveCommands.joystickDrive(drive, () -> -driver1.getX(), driver1::getY, driver2::getX));
+    drive.setDefaultCommand(DriveCommands.joystickDrive(drive, () -> driver1.getX(), () -> -driver1.getX(), () -> -driver2.getX()));
   }
 
   /**
