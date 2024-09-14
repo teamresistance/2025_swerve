@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
@@ -38,8 +39,12 @@ public class RobotContainer {
   //  private final Flywheel flywheel;
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
-
+//  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandJoystick driver1 = new CommandJoystick(0);
+  private final CommandJoystick driver2 = new CommandJoystick(1);
+  private final CommandJoystick codriver1 = new CommandJoystick(2);
+  
+  
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
   private final LoggedDashboardNumber flywheelSpeedInput =
@@ -134,29 +139,33 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
+//  private void configureButtonBindings() {
+//    drive.setDefaultCommand(
+//        DriveCommands.joystickDrive(
+//            drive,
+//            () -> -controller.getLeftY(),
+//            () -> -controller.getLeftX(),
+//            () -> -controller.getRightX()));
+//    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+//    //		controller
+//    //			.b()
+//    //			.onTrue(
+//    //				Commands.runOnce(
+//    //						() ->
+//    //							drive.setPose(
+//    //								new Pose2d(drive.getPose().getTranslation(), new Rotation2d())), // reset gyro
+//    //						drive)
+//    //					.ignoringDisable(true));
+//    //    controller
+//    //        .a()
+//    //        .whileTrue(
+//    //            Commands.startEnd(
+//    //                () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop,
+//    // flywheel));
+//  }
+  
   private void configureButtonBindings() {
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    //		controller
-    //			.b()
-    //			.onTrue(
-    //				Commands.runOnce(
-    //						() ->
-    //							drive.setPose(
-    //								new Pose2d(drive.getPose().getTranslation(), new Rotation2d())), // reset gyro
-    //						drive)
-    //					.ignoringDisable(true));
-    //    controller
-    //        .a()
-    //        .whileTrue(
-    //            Commands.startEnd(
-    //                () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop,
-    // flywheel));
+    drive.setDefaultCommand(DriveCommands.joystickDrive(drive, () -> -driver1.getX(), driver1::getY, driver2::getX));
   }
 
   /**
