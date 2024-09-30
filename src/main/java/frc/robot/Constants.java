@@ -60,9 +60,9 @@ public final class Constants {
   public static boolean tuningMode = false;
   public static double drivekP = 0.001;
   public static double drivekD = 0.0;
-  public static double ffkS = 0.02;
+  public static double ffkS = 0.03;
   public static double ffkV = 0.2;
-  public static double turnkP = 4.0;
+  public static double turnkP = 4.3;
   public static double turnkD = 0.0;
 
   public enum Mode {
