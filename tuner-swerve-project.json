@@ -90,7 +90,9 @@
       "IsEncoderTypeCAN": true,
       "IsDeviceSelectionCompleted": true,
       "IsConfigurationCompleted": true,
-      "AvailEncoderTypes": ["CANcoder"]
+      "AvailEncoderTypes": [
+        "CANcoder"
+      ]
     },
     {
       "ModuleName": "Front Right",
@@ -180,7 +182,9 @@
       "IsEncoderTypeCAN": true,
       "IsDeviceSelectionCompleted": true,
       "IsConfigurationCompleted": true,
-      "AvailEncoderTypes": ["CANcoder"]
+      "AvailEncoderTypes": [
+        "CANcoder"
+      ]
     },
     {
       "ModuleName": "Back Left",
@@ -270,7 +274,9 @@
       "IsEncoderTypeCAN": true,
       "IsDeviceSelectionCompleted": true,
       "IsConfigurationCompleted": true,
-      "AvailEncoderTypes": ["CANcoder"]
+      "AvailEncoderTypes": [
+        "CANcoder"
+      ]
     },
     {
       "ModuleName": "Back Right",
@@ -360,7 +366,9 @@
       "IsEncoderTypeCAN": true,
       "IsDeviceSelectionCompleted": true,
       "IsConfigurationCompleted": true,
-      "AvailEncoderTypes": ["CANcoder"]
+      "AvailEncoderTypes": [
+        "CANcoder"
+      ]
     }
   ],
   "SwerveOptions": {
