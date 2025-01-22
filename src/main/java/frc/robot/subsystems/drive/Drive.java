@@ -187,7 +187,7 @@ public class Drive extends SubsystemBase {
     // Vision initialization
     try {
         aprilTagFieldLayout =
-                AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+                AprilTagFieldLayout.loadFromResource(AprilTagFields.kBaseResourceDir);
     } catch (IOException e) {
         System.err.println("Failed to load AprilTagFieldLayout: " + e.getMessage());
     }
@@ -204,14 +204,9 @@ public class Drive extends SubsystemBase {
   public void periodic() {
     odometryLock.lock(); // Prevents odometry updates while reading data
 
-    try {
-      // Vision updates
-      Pose2d visionPose1 = updatePoseWithVision(cam, photonPoseEstimator);
-      Pose2d visionPose2 = updatePoseWithVision(cam2, photonPoseEstimator2);
+    Pose2d visionPose1 = updatePoseWithVision(cam, photonPoseEstimator);
+    Pose2d visionPose2 = updatePoseWithVision(cam2, photonPoseEstimator2);
 
-    } finally {
-        odometryLock.unlock();
-    }
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
     for (var module : modules) {
