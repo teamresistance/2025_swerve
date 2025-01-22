@@ -23,14 +23,21 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -50,10 +57,16 @@ import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
+
+import java.io.IOException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
@@ -106,6 +119,21 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
+
+  // Vision-related fields
+  private static PhotonCamera cam = new PhotonCamera("Cam 1");
+  private static PhotonCamera cam2 = new PhotonCamera("Cam 2");
+  private static PhotonPoseEstimator photonPoseEstimator;
+  private static PhotonPoseEstimator photonPoseEstimator2;
+  private static Transform3d robotToCam =
+          new Transform3d(
+              new Translation3d(0.1524, 0.4318, 0.2032), // Right camera translation (X, Y, Z)
+              new Rotation3d(0.0, 0.0873, 0.5236)); // Right camera rotation (Roll, Pitch, Yaw)
+  private static Transform3d robotToCam2 =
+          new Transform3d(
+              new Translation3d(0.1524, -0.4318, 0.2032), // Left camera translation (X, Y, Z)
+              new Rotation3d(0.0, 0.0873, -0.5236)); // Left camera rotation (Roll, Pitch, Yaw)
+  private static AprilTagFieldLayout aprilTagFieldLayout;
   public Drive(
       GyroIO gyroIO,
       ModuleIO flModuleIO,
@@ -156,11 +184,34 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+    // Vision initialization
+    try {
+        aprilTagFieldLayout =
+                AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+    } catch (IOException e) {
+        System.err.println("Failed to load AprilTagFieldLayout: " + e.getMessage());
+    }
+
+    photonPoseEstimator =
+            new PhotonPoseEstimator(
+                    aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
+    photonPoseEstimator2 =
+            new PhotonPoseEstimator(
+                    aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam2);
   }
 
   @Override
   public void periodic() {
     odometryLock.lock(); // Prevents odometry updates while reading data
+
+    try {
+      // Vision updates
+      Pose2d visionPose1 = updatePoseWithVision(cam, photonPoseEstimator);
+      Pose2d visionPose2 = updatePoseWithVision(cam2, photonPoseEstimator2);
+
+    } finally {
+        odometryLock.unlock();
+    }
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
     for (var module : modules) {
@@ -216,6 +267,27 @@ public class Drive extends SubsystemBase {
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
   }
+
+
+    private Pose2d updatePoseWithVision(PhotonCamera camera, PhotonPoseEstimator estimator) {
+        Pose2d estimatedPose = new Pose2d();
+        PhotonPipelineResult result = camera.getLatestResult();
+        if (result.hasTargets() && estimator.getReferencePose() != null) {
+            var update = estimator.update(result);
+            if (!update.isEmpty()) {
+                Pose3d estimatedPose3d = update.get().estimatedPose;
+                estimatedPose = estimatedPose3d.toPose2d();
+                poseEstimator.addVisionMeasurement(estimatedPose, result.getTimestampSeconds());
+            }
+        }
+        return estimatedPose;
+    }
+
+    public void resetVisionEstimates() {
+        photonPoseEstimator.setReferencePose(poseEstimator.getEstimatedPosition());
+        photonPoseEstimator2.setReferencePose(poseEstimator.getEstimatedPosition());
+    }
+
 
   /**
    * Runs the drive at the desired velocity.
