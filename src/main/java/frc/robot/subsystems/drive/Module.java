@@ -81,7 +81,7 @@ public class Module {
   public void runSetpoint(SwerveModuleState state) {
     // Optimize velocity setpoint
     state.optimize(getAngle());
-    state.cosineScale(inputs.turnPosition);
+    state.cosineScale(inputs.turnPosition); // less jerky movement
 
     // Apply setpoints
     io.setDriveVelocity(state.speedMetersPerSecond / constants.WheelRadius);
