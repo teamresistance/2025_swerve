@@ -34,7 +34,6 @@ public class Vision extends SubsystemBase {
         new Pose3d(
             new Translation3d(0.1524, -0.4318, 0.2032), // Left camera translation (X, Y, Z)
             new Rotation3d(0.0, 0.0873, -0.5236)) // in radians btw
-
       };
   AprilTagFieldLayout aprilTagFieldLayout;
   private final PhotonCamera[] cameras;

@@ -44,7 +44,7 @@ public class RobotContainer {
 
   public static final PhotonCamera frontLeftCamera = new PhotonCamera("front-left");
   public static final PhotonCamera frontRightCamera = new PhotonCamera("front-right");
-  public final Vision aprilTagVision;
+  public Vision aprilTagVision;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -86,7 +86,7 @@ public class RobotContainer {
 
   private Vision configureAprilTagVision() {
     try {
-      Vision aprilTagVision = new Vision(frontLeftCamera, frontRightCamera);
+      aprilTagVision = new Vision(frontLeftCamera, frontRightCamera);
     } catch (IOException e) {
       e.printStackTrace();
     }
