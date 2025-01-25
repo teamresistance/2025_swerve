@@ -25,63 +25,25 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class Vision extends SubsystemBase {
   private static final double fieldBorderMargin = 0.5;
   private final Pose3d[] cameraPoses =
-      // new Pose3d[] {
-      //   // Front Left
-      //   new Pose3d(
-      //       Units.inchesToMeters(6.67),
-      //       Units.inchesToMeters(12.74),
-      //       Units.inchesToMeters(25.1),
-      //       new Rotation3d(
-      //           Units.degreesToRadians(180.0),
-      //           Units.degreesToRadians(-25.0),
-      //           Units.degreesToRadians(15.0))),
-      //   // Front Right
-      //   new Pose3d(
-      //       Units.inchesToMeters(6.67),
-      //       Units.inchesToMeters(-12.74),
-      //       Units.inchesToMeters(25.1),
-      //       new Rotation3d(
-      //           Units.degreesToRadians(180.0),
-      //           Units.degreesToRadians(-25.0),
-      //           Units.degreesToRadians(-15.0))),
-      //   // Back Left
-      //   new Pose3d(
-      //       Units.inchesToMeters(1.33),
-      //       Units.inchesToMeters(12.74),
-      //       Units.inchesToMeters(25.1),
-      //       new Rotation3d(
-      //           Units.degreesToRadians(180.0),
-      //           Units.degreesToRadians(-25.0),
-      //           Units.degreesToRadians(165.0))),
-      //   // Back Right
-      //   new Pose3d(
-      //       Units.inchesToMeters(1.33),
-      //       Units.inchesToMeters(-12.74),
-      //       Units.inchesToMeters(25.1),
-      //       new Rotation3d(
-      //           Units.degreesToRadians(180.0),
-      //           Units.degreesToRadians(-25.0),
-      //           Units.degreesToRadians(-165.0))),
-      // };
       new Pose3d[] {
         // Front Left
         new Pose3d(
-            Units.inchesToMeters(13.992046),
-            Units.inchesToMeters(8.802034),
-            Units.inchesToMeters(12.161000),
+            Units.inchesToMeters(0),
+            Units.inchesToMeters(0),
+            Units.inchesToMeters(0),
             new Rotation3d(
                 Units.degreesToRadians(0.0),
                 Units.degreesToRadians(0.0),
-                Units.degreesToRadians(-45.0))),
+                Units.degreesToRadians(0))),
         // Front Right
         new Pose3d(
-            Units.inchesToMeters(13.992046),
-            Units.inchesToMeters(-8.802034),
-            Units.inchesToMeters(12.161000),
+            Units.inchesToMeters(0),
+            Units.inchesToMeters(0),
+            Units.inchesToMeters(0),
             new Rotation3d(
                 Units.degreesToRadians(0.0),
                 Units.degreesToRadians(0.0),
-                Units.degreesToRadians(45.0)))
+                Units.degreesToRadians(0)))
       };
   AprilTagFieldLayout aprilTagFieldLayout;
   private final PhotonCamera[] cameras;
@@ -117,7 +79,6 @@ public class Vision extends SubsystemBase {
       aprilTagFieldLayout =
           AprilTagFieldLayout.loadFromResource(AprilTagFields.k2025Reefscape.m_resourceFile);
     } catch (IOException ignored) {
-
     }
   }
 

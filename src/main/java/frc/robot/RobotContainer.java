@@ -17,15 +17,20 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.*;
+import frc.robot.subsystems.vision.Vision;
+import java.io.IOException;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.photonvision.PhotonCamera;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -37,6 +42,10 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
 
+  public static final PhotonCamera frontLeftCamera = new PhotonCamera("front-left");
+  public static final PhotonCamera frontRightCamera = new PhotonCamera("front-right");
+  public final Vision aprilTagVision;
+
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
@@ -45,43 +54,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    switch (Constants.currentMode) {
-      case REAL:
-        // Real robot, instantiate hardware IO implementations
-        drive =
-            new Drive(
-                new GyroIOPigeon2(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
-        break;
+    drive = configureDrive();
+    autoChooser = configureAutos();
+    aprilTagVision = configureAprilTagVision();
+    configureButtonBindings();
+  }
 
-      case SIM:
-        // Sim robot, instantiate physics sim IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
-        break;
-
-      default:
-        // Replayed robot, disable IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
-        break;
-    }
-
+  private LoggedDashboardChooser<Command> configureAutos() {
     // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    LoggedDashboardChooser<Command> autoChooser =
+        new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -99,15 +81,54 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    // Configure the button bindings
-    configureButtonBindings();
+    return autoChooser;
+  }
+
+  private Vision configureAprilTagVision() {
+    try {
+      Vision aprilTagVision = new Vision(frontLeftCamera, frontRightCamera);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    aprilTagVision.setDataInterfaces(drive::getPose, drive::addAutoVisionMeasurement);
+    return aprilTagVision;
+  }
+
+  private Drive configureDrive() {
+    Drive drive =
+        switch (Constants.currentMode) {
+          case REAL ->
+          // Real robot, instantiate hardware IO implementations
+          new Drive(
+              new GyroIOPigeon2(),
+              new ModuleIOTalonFX(TunerConstants.FrontLeft),
+              new ModuleIOTalonFX(TunerConstants.FrontRight),
+              new ModuleIOTalonFX(TunerConstants.BackLeft),
+              new ModuleIOTalonFX(TunerConstants.BackRight));
+          case SIM ->
+          // Sim robot, instantiate physics sim IO implementations
+          new Drive(
+              new GyroIO() {},
+              new ModuleIOSim(TunerConstants.FrontLeft),
+              new ModuleIOSim(TunerConstants.FrontRight),
+              new ModuleIOSim(TunerConstants.BackLeft),
+              new ModuleIOSim(TunerConstants.BackRight));
+          default ->
+          // Replayed robot, disable IO implementations
+          new Drive(
+              new GyroIO() {},
+              new ModuleIO() {},
+              new ModuleIO() {},
+              new ModuleIO() {},
+              new ModuleIO() {});
+        };
+    return drive;
   }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * instantiating a {@link GenericHID} or one of its subclasses ({@link Joystick} or {@link
+   * XboxController}), and then passing it to a {@link JoystickButton}.
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
