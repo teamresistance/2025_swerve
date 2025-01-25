@@ -42,12 +42,16 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
 
-  public static final PhotonCamera frontLeftCamera = new PhotonCamera("front-left");
-  public static final PhotonCamera frontRightCamera = new PhotonCamera("front-right");
+  public final PhotonCamera frontLeftCamera = new PhotonCamera("front-left");
+  public final PhotonCamera frontRightCamera = new PhotonCamera("front-right");
+  //  public final PhotonCamera backLeftCamera = new PhotonCamera("back-left");
+  //  public final PhotonCamera backRightCamera = new PhotonCamera("back-right");
+
   public Vision aprilTagVision;
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController driver = new CommandXboxController(0);
+  private final CommandXboxController codriver = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -134,26 +138,20 @@ public class RobotContainer {
     // Default command, normal field-relative drive
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            drive, () -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> -driver.getRightX()));
 
     // Lock to 0° when A button is held
-    controller
+    driver
         .a()
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> new Rotation2d()));
+                drive, () -> -driver.getLeftY(), () -> -driver.getLeftX(), () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    driver.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    // Reset gyro to 0° when B button is pressed
-    controller
+    // Reset gyro to 0 when B button is pressed
+    driver
         .b()
         .onTrue(
             Commands.runOnce(
