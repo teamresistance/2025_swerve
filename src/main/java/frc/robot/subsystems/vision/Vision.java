@@ -117,7 +117,6 @@ public class Vision extends SubsystemBase {
       aprilTagFieldLayout =
           AprilTagFieldLayout.loadFromResource(AprilTagFields.k2025Reefscape.m_resourceFile);
     } catch (IOException ignored) {
-
     }
   }
 
