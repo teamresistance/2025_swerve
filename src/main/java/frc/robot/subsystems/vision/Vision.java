@@ -6,7 +6,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.GeomUtil;
@@ -28,22 +28,13 @@ public class Vision extends SubsystemBase {
       new Pose3d[] {
         // Front Left
         new Pose3d(
-            Units.inchesToMeters(0),
-            Units.inchesToMeters(0),
-            Units.inchesToMeters(0),
-            new Rotation3d(
-                Units.degreesToRadians(0.0),
-                Units.degreesToRadians(0.0),
-                Units.degreesToRadians(0))),
+            new Translation3d(0.1524, 0.4318, 0.2032), // Right camera translation (X, Y, Z)
+            new Rotation3d(0.0, 0.0873, 0.5236)),
         // Front Right
         new Pose3d(
-            Units.inchesToMeters(0),
-            Units.inchesToMeters(0),
-            Units.inchesToMeters(0),
-            new Rotation3d(
-                Units.degreesToRadians(0.0),
-                Units.degreesToRadians(0.0),
-                Units.degreesToRadians(0)))
+            new Translation3d(0.1524, -0.4318, 0.2032), // Left camera translation (X, Y, Z)
+            new Rotation3d(0.0, 0.0873, -0.5236)) // in radians btw
+
       };
   AprilTagFieldLayout aprilTagFieldLayout;
   private final PhotonCamera[] cameras;
