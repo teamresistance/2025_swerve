@@ -47,7 +47,7 @@ public class RobotContainer {
   final double DEADZONE = 0.1;
 
   // Create the target Transform2d (Translation and Rotation)
-  Translation2d targetTranslation = new Translation2d(14, 4); // X = 14, Y = 4
+  Translation2d targetTranslation = new Translation2d(15, 4); // X = 14, Y = 4
   Rotation2d targetRotation = new Rotation2d(0.0); // No rotation
   Transform2d targetTransform = new Transform2d(targetTranslation, targetRotation);
 
@@ -156,10 +156,7 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller
-        .leftBumper()
-        .whileTrue(
-            DriveCommands.goToTransform(drive, targetTransform));
+    controller.leftBumper().whileTrue(DriveCommands.goToTransform(drive, targetTransform));
 
     // **Left Trigger - Go to AprilTag Position A**
     controller
@@ -169,10 +166,8 @@ public class RobotContainer {
     // **Right Trigger - Go to AprilTag Position B**
     controller
         .rightTrigger()
-        .whileTrue(DriveCommands.goTo2DPos(drive, 1.0, 2.0, Math.PI / 2)); // Example values
-
+        .whileTrue(DriveCommands.goTo2DPos(drive, 1.0, 2.0, 0.0)); // Example values
   }
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

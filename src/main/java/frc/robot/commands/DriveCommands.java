@@ -164,7 +164,7 @@ public class DriveCommands {
     // PID controllers for X and Y positions
     ProfiledPIDController pidX =
         new ProfiledPIDController(
-            0.5, // KP for X (tune as needed)
+            0.7, // KP for X (tune as needed)
             0.0, // KI for X (no integral term)
             0.0, // KD for X (no derivative term)
             new TrapezoidProfile.Constraints(5.0, 3.0) // Constraints on X speed (tune as needed)
@@ -172,7 +172,7 @@ public class DriveCommands {
 
     ProfiledPIDController pidY =
         new ProfiledPIDController(
-            0.5, // KP for Y (tune as needed)
+            0.7, // KP for Y (tune as needed)
             0.0, // KI for Y (no integral term)
             0.0, // KD for Y (no derivative term)
             new TrapezoidProfile.Constraints(5.0, 3.0) // Constraints on Y speed (tune as needed)
@@ -227,7 +227,10 @@ public class DriveCommands {
               pidX.reset(drive.getPose().getX());
               pidY.reset(drive.getPose().getY());
             })
-        .until(() -> false); // Timeout to prevent infinite looping if the target is unreachable (adjust as
+        .until(
+            () ->
+                false); // Timeout to prevent infinite looping if the target is unreachable (adjust
+    // as
     // needed)
   }
 
@@ -362,19 +365,25 @@ public class DriveCommands {
                               + " inches");
                     })));
   }
-    public static Command goTo2DPos(Drive drive, double targetX, double targetTagSize, double targetAngle) {
-      // PID Controllers for X and Y movement
-      ProfiledPIDController pidX = new ProfiledPIDController(
-          0.5, 0.0, 0.0, new TrapezoidProfile.Constraints(5.0, 3.0));
-      ProfiledPIDController pidY = new ProfiledPIDController(
-          0.5, 0.0, 0.0, new TrapezoidProfile.Constraints(5.0, 3.0));
-      ProfiledPIDController angleController = new ProfiledPIDController(
-          ANGLE_KP, 0.0, ANGLE_KD, new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
 
-      angleController.enableContinuousInput(-Math.PI, Math.PI);
+  public static Command goTo2DPos(
+      Drive drive, double targetX, double targetTagSize, double targetAngle) {
+    // PID Controllers for X and Y movement
+    ProfiledPIDController pidX =
+        new ProfiledPIDController(0.5, 0.0, 0.0, new TrapezoidProfile.Constraints(5.0, 3.0));
+    ProfiledPIDController pidY =
+        new ProfiledPIDController(0.5, 0.0, 0.0, new TrapezoidProfile.Constraints(5.0, 3.0));
+    ProfiledPIDController angleController =
+        new ProfiledPIDController(
+            ANGLE_KP,
+            0.0,
+            ANGLE_KD,
+            new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
 
-      return Commands.run(
-          () -> {
+    angleController.enableContinuousInput(-Math.PI, Math.PI);
+
+    return Commands.run(
+            () -> {
               // Get AprilTag readings from Limelight
               double[] tagData = drive.getAprilTagData();
               double currentX = tagData[0];
@@ -387,22 +396,24 @@ public class DriveCommands {
               double omegaSpeed = angleController.calculate(currentAngle, targetAngle);
 
               // Apply movement commands
-              ChassisSpeeds speeds = new ChassisSpeeds(
-                  -ySpeed * drive.getMaxLinearSpeedMetersPerSec(), // Forward/backward
-                  -xSpeed * drive.getMaxLinearSpeedMetersPerSec(), // Left/right
-                  omegaSpeed); // Rotational speed
+              ChassisSpeeds speeds =
+                  new ChassisSpeeds(
+                      -ySpeed * drive.getMaxLinearSpeedMetersPerSec(), // Forward/backward
+                      -xSpeed * drive.getMaxLinearSpeedMetersPerSec(), // Left/right
+                      omegaSpeed); // Rotational speed
 
               // Convert to robot-relative speeds
               drive.runVelocity(speeds);
-          }, drive)
-          .beforeStarting(() -> {
+            },
+            drive)
+        .beforeStarting(
+            () -> {
               pidX.reset(0);
               pidY.reset(0);
               angleController.reset(drive.getRotation().getRadians());
-          })
-          .until(() -> false); // Runs continuously while the button is held
+            })
+        .until(() -> false); // Runs continuously while the button is held
   }
-
 
   private static class WheelRadiusCharacterizationState {
     double[] positions = new double[4];
@@ -413,5 +424,4 @@ public class DriveCommands {
   public static double[] getAprilTagData(Drive drive) {
     return drive.getAprilTagData();
   }
-
 }

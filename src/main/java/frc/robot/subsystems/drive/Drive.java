@@ -60,6 +60,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
+import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -127,20 +128,25 @@ public class Drive extends SubsystemBase {
   private static PhotonPoseEstimator photonPoseEstimatorFrontLeft;
   private static Transform3d robotToCamFrontRight =
       new Transform3d(
-          new Translation3d(0.334, 0.270, 0.267), // Right camera translation (X, Y, Z)
-          new Rotation3d(0.0, Units.degreesToRadians(-12.63), Units.degreesToRadians(-45))); // Right camera rotation (Roll, Pitch, Yaw)
+          new Translation3d(0.270, -0.334, 0.267), // Right camera translation (X, Y, Z)
+          new Rotation3d(
+              0.0,
+              Units.degreesToRadians(-12.63),
+              Units.degreesToRadians(-45))); // Right camera rotation (Roll, Pitch, Yaw)
 
   private static Transform3d robotToCamFrontLeft =
       new Transform3d(
-          new Translation3d(-0.334, 0.270, 0.267), // Left camera translation (X, Y, Z)
-          new Rotation3d(0.0, Units.degreesToRadians(-12.63), Units.degreesToRadians(45))); // Left camera rotation (Roll, Pitch, Yaw)
+          new Translation3d(0.270, 0.334, 0.267), // Left camera translation (X, Y, Z)
+          new Rotation3d(
+              0.0,
+              Units.degreesToRadians(-12.63),
+              Units.degreesToRadians(45))); // Left camera rotation (Roll, Pitch, Yaw)
 
   private static AprilTagFieldLayout aprilTagFieldLayout;
 
   private static double tagX = 0.0;
   private static double tagY = 0.0;
   private static double tagSize = 0.0;
-
 
   public Drive(
       GyroIO gyroIO,
@@ -204,14 +210,23 @@ public class Drive extends SubsystemBase {
             aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCamFrontLeft);
   }
 
+  Pose2d visionPose1;
+  Pose2d visionPose2;
+
   @Override
   public void periodic() {
     updateAprilTagData();
 
     odometryLock.lock(); // Prevents odometry updates while reading data
 
-    Pose2d visionPose1 = updatePoseWithVision(frontRightCam, photonPoseEstimatorFrontRight);
-    Pose2d visionPose2 = updatePoseWithVision(frontLeftCam, photonPoseEstimatorFrontLeft);
+    visionPose1 = updatePoseWithVision(frontRightCam, photonPoseEstimatorFrontRight);
+    visionPose2 = updatePoseWithVision(frontLeftCam, photonPoseEstimatorFrontLeft);
+
+    if (!Objects.equals(visionPose1, new Pose2d(0, 0, Rotation2d.fromRadians(0))))
+      Logger.recordOutput("VisionsPose1", visionPose1);
+
+    if (!Objects.equals(visionPose2, new Pose2d(0, 0, Rotation2d.fromRadians(0))))
+      Logger.recordOutput("VisionsPose2", visionPose2);
 
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
@@ -269,6 +284,8 @@ public class Drive extends SubsystemBase {
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
   }
 
+  Pose3d estimatedPose3d;
+
   private Pose2d updatePoseWithVision(PhotonCamera camera, PhotonPoseEstimator estimator) {
     Pose2d estimatedPose = new Pose2d();
     PhotonPipelineResult result = camera.getLatestResult();
@@ -276,9 +293,10 @@ public class Drive extends SubsystemBase {
       // System.out.println("Result has target and estimator.gotPose");
       var update = estimator.update(result);
       if (!update.isEmpty()) {
-        Pose3d estimatedPose3d = update.get().estimatedPose;
+        estimatedPose3d = update.get().estimatedPose;
         estimatedPose = estimatedPose3d.toPose2d();
         poseEstimator.addVisionMeasurement(estimatedPose, result.getTimestampSeconds());
+        Logger.recordOutput("3DPose", estimatedPose3d);
       }
     }
     return estimatedPose;
@@ -289,22 +307,20 @@ public class Drive extends SubsystemBase {
     photonPoseEstimatorFrontLeft.setReferencePose(poseEstimator.getEstimatedPosition());
   }
 
-
   public void updateAprilTagData() {
-      NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
-      NetworkTableEntry tx = limelightTable.getEntry("tx");  // X offset of the detected tag
-      NetworkTableEntry ty = limelightTable.getEntry("ty");  // Y offset of the detected tag
-      NetworkTableEntry ta = limelightTable.getEntry("ta");  // Area (size) of the detected tag
+    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTableEntry tx = limelightTable.getEntry("tx"); // X offset of the detected tag
+    NetworkTableEntry ty = limelightTable.getEntry("ty"); // Y offset of the detected tag
+    NetworkTableEntry ta = limelightTable.getEntry("ta"); // Area (size) of the detected tag
 
-      tagX = tx.getDouble(0.0);
-      tagY = ty.getDouble(0.0);
-      tagSize = ta.getDouble(0.0);
+    tagX = tx.getDouble(0.0);
+    tagY = ty.getDouble(0.0);
+    tagSize = ta.getDouble(0.0);
   }
 
   public double[] getAprilTagData() {
-    return new double[]{tagX, tagY, tagSize};
+    return new double[] {tagX, tagY, tagSize};
   }
-
 
   /**
    * Runs the drive at the desired velocity.
