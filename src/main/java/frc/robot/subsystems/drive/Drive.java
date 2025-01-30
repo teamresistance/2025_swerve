@@ -429,7 +429,6 @@ public class Drive extends SubsystemBase {
   /** Returns the current odometry pose. */
   @AutoLogOutput(key = "Odometry/Robot")
   public Pose2d getPose() {
-    // System.out.println(poseEstimator.getEstimatedPosition().getTranslation());
     return poseEstimator.getEstimatedPosition();
   }
 
@@ -450,7 +449,6 @@ public class Drive extends SubsystemBase {
       double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs) {
 
-    System.out.println(visionRobotPoseMeters);
     poseEstimator.addVisionMeasurement(
         visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
   }
