@@ -16,6 +16,8 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,6 +43,13 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+
+  final double DEADZONE = 0.1;
+
+  // Create the target Transform2d (Translation and Rotation)
+  Translation2d targetTranslation = new Translation2d(15, 4); // X = 14, Y = 4
+  Rotation2d targetRotation = new Rotation2d(0.0); // No rotation
+  Transform2d targetTransform = new Transform2d(targetTranslation, targetRotation);
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -119,9 +128,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> -applyDeadband(controller.getLeftY()),
+            () -> -applyDeadband(controller.getLeftX()),
+            () -> -applyDeadband(controller.getRightX())));
 
     // Lock to 0° when A button is held
     controller
@@ -129,8 +138,8 @@ public class RobotContainer {
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
+                () -> -applyDeadband(controller.getLeftY()),
+                () -> -applyDeadband(controller.getLeftX()),
                 () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
@@ -146,6 +155,18 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    controller.leftBumper().whileTrue(DriveCommands.goToTransform(drive, targetTransform));
+
+    // **Left Trigger - Go to AprilTag Position A**
+    controller
+        .leftTrigger()
+        .whileTrue(DriveCommands.goTo2DPos(drive, 0.0, 1.0, 0.0)); // Example values
+
+    // **Right Trigger - Go to AprilTag Position B**
+    controller
+        .rightTrigger()
+        .whileTrue(DriveCommands.goTo2DPos(drive, 1.0, 2.0, 0.0)); // Example values
   }
 
   /**
@@ -155,5 +176,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  // Utility function to apply deadband
+  private double applyDeadband(double value) {
+    return (Math.abs(value) > DEADZONE) ? value : 0.0;
   }
 }

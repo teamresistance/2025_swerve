@@ -45,6 +45,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -56,7 +60,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
-import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -118,19 +122,31 @@ public class Drive extends SubsystemBase {
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
   // Vision-related fields
-  private static PhotonCamera cam = new PhotonCamera("Cam 1");
-  private static PhotonCamera cam2 = new PhotonCamera("Cam 2");
-  private static PhotonPoseEstimator photonPoseEstimator;
-  private static PhotonPoseEstimator photonPoseEstimator2;
-  private static Transform3d robotToCam =
+  private static PhotonCamera frontRightCam = new PhotonCamera("front-right");
+  private static PhotonCamera frontLeftCam = new PhotonCamera("front-left");
+  private static PhotonPoseEstimator photonPoseEstimatorFrontRight;
+  private static PhotonPoseEstimator photonPoseEstimatorFrontLeft;
+  private static Transform3d robotToCamFrontRight =
       new Transform3d(
-          new Translation3d(0.1524, 0.4318, 0.2032), // Right camera translation (X, Y, Z)
-          new Rotation3d(0.0, 0.0873, 0.5236)); // Right camera rotation (Roll, Pitch, Yaw)
-  private static Transform3d robotToCam2 =
+          new Translation3d(0.270, -0.334, 0.267), // Right camera translation (X, Y, Z)
+          new Rotation3d(
+              0.0,
+              Units.degreesToRadians(-12.63),
+              Units.degreesToRadians(-45))); // Right camera rotation (Roll, Pitch, Yaw)
+
+  private static Transform3d robotToCamFrontLeft =
       new Transform3d(
-          new Translation3d(0.1524, -0.4318, 0.2032), // Left camera translation (X, Y, Z)
-          new Rotation3d(0.0, 0.0873, -0.5236)); // Left camera rotation (Roll, Pitch, Yaw)
+          new Translation3d(0.270, 0.334, 0.267), // Left camera translation (X, Y, Z)
+          new Rotation3d(
+              0.0,
+              Units.degreesToRadians(-12.63),
+              Units.degreesToRadians(45))); // Left camera rotation (Roll, Pitch, Yaw)
+
   private static AprilTagFieldLayout aprilTagFieldLayout;
+
+  private static double tagX = 0.0;
+  private static double tagY = 0.0;
+  private static double tagSize = 0.0;
 
   public Drive(
       GyroIO gyroIO,
@@ -183,26 +199,34 @@ public class Drive extends SubsystemBase {
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
     // Vision initialization
-    try {
-      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.kBaseResourceDir);
-    } catch (IOException e) {
-      System.err.println("Failed to load AprilTagFieldLayout: " + e.getMessage());
-    }
 
-    photonPoseEstimator =
+    aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+
+    photonPoseEstimatorFrontRight =
         new PhotonPoseEstimator(
-            aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
-    photonPoseEstimator2 =
+            aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCamFrontRight);
+    photonPoseEstimatorFrontLeft =
         new PhotonPoseEstimator(
-            aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam2);
+            aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCamFrontLeft);
   }
+
+  Pose2d visionPose1;
+  Pose2d visionPose2;
 
   @Override
   public void periodic() {
+    updateAprilTagData();
+
     odometryLock.lock(); // Prevents odometry updates while reading data
 
-    Pose2d visionPose1 = updatePoseWithVision(cam, photonPoseEstimator);
-    Pose2d visionPose2 = updatePoseWithVision(cam2, photonPoseEstimator2);
+    visionPose1 = updatePoseWithVision(frontRightCam, photonPoseEstimatorFrontRight);
+    visionPose2 = updatePoseWithVision(frontLeftCam, photonPoseEstimatorFrontLeft);
+
+    if (!Objects.equals(visionPose1, new Pose2d(0, 0, Rotation2d.fromRadians(0))))
+      Logger.recordOutput("VisionsPose1", visionPose1);
+
+    if (!Objects.equals(visionPose2, new Pose2d(0, 0, Rotation2d.fromRadians(0))))
+      Logger.recordOutput("VisionsPose2", visionPose2);
 
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
@@ -260,23 +284,42 @@ public class Drive extends SubsystemBase {
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
   }
 
+  Pose3d estimatedPose3d;
+
   private Pose2d updatePoseWithVision(PhotonCamera camera, PhotonPoseEstimator estimator) {
     Pose2d estimatedPose = new Pose2d();
     PhotonPipelineResult result = camera.getLatestResult();
-    if (result.hasTargets() && estimator.getReferencePose() != null) {
+    if (result.hasTargets()) {
+      // System.out.println("Result has target and estimator.gotPose");
       var update = estimator.update(result);
       if (!update.isEmpty()) {
-        Pose3d estimatedPose3d = update.get().estimatedPose;
+        estimatedPose3d = update.get().estimatedPose;
         estimatedPose = estimatedPose3d.toPose2d();
         poseEstimator.addVisionMeasurement(estimatedPose, result.getTimestampSeconds());
+        Logger.recordOutput("3DPose", estimatedPose3d);
       }
     }
     return estimatedPose;
   }
 
   public void resetVisionEstimates() {
-    photonPoseEstimator.setReferencePose(poseEstimator.getEstimatedPosition());
-    photonPoseEstimator2.setReferencePose(poseEstimator.getEstimatedPosition());
+    photonPoseEstimatorFrontRight.setReferencePose(poseEstimator.getEstimatedPosition());
+    photonPoseEstimatorFrontLeft.setReferencePose(poseEstimator.getEstimatedPosition());
+  }
+
+  public void updateAprilTagData() {
+    NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTableEntry tx = limelightTable.getEntry("tx"); // X offset of the detected tag
+    NetworkTableEntry ty = limelightTable.getEntry("ty"); // Y offset of the detected tag
+    NetworkTableEntry ta = limelightTable.getEntry("ta"); // Area (size) of the detected tag
+
+    tagX = tx.getDouble(0.0);
+    tagY = ty.getDouble(0.0);
+    tagSize = ta.getDouble(0.0);
+  }
+
+  public double[] getAprilTagData() {
+    return new double[] {tagX, tagY, tagSize};
   }
 
   /**
@@ -396,7 +439,8 @@ public class Drive extends SubsystemBase {
 
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
-    poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+    poseEstimator.resetPosition(
+        rawGyroRotation.plus(new Rotation2d(Math.PI)), getModulePositions(), pose);
   }
 
   /** Adds a new timestamped vision measurement. */
@@ -404,6 +448,7 @@ public class Drive extends SubsystemBase {
       Pose2d visionRobotPoseMeters,
       double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs) {
+
     poseEstimator.addVisionMeasurement(
         visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
   }

@@ -1,10 +1,15 @@
 Right
-x: 17 in
-y: 6 in
-yaw: 30 cw
+x: 7 in
+y: 11.125 in
+yaw: 23.5 cw
 pitch: 5
 
-Left -17 in
-y: 6 in
-yaw: -30 cw
+Left -7 in
+y: 10.875 in
+yaw: -20 cw
 pitch: 5
+
+8 inch height
+
+23.5 degrees right
+20 degrees left
