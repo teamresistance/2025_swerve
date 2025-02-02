@@ -102,29 +102,29 @@ public class RobotContainer {
     Drive drive =
         switch (Constants.currentMode) {
           case REAL ->
-          // Real robot, instantiate hardware IO implementations
-          new Drive(
-              new GyroIOPigeon2(),
-              new ModuleIOTalonFX(TunerConstants.FrontLeft),
-              new ModuleIOTalonFX(TunerConstants.FrontRight),
-              new ModuleIOTalonFX(TunerConstants.BackLeft),
-              new ModuleIOTalonFX(TunerConstants.BackRight));
+              // Real robot, instantiate hardware IO implementations
+              new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                  new ModuleIOTalonFX(TunerConstants.FrontRight),
+                  new ModuleIOTalonFX(TunerConstants.BackLeft),
+                  new ModuleIOTalonFX(TunerConstants.BackRight));
           case SIM ->
-          // Sim robot, instantiate physics sim IO implementations
-          new Drive(
-              new GyroIO() {},
-              new ModuleIOSim(TunerConstants.FrontLeft),
-              new ModuleIOSim(TunerConstants.FrontRight),
-              new ModuleIOSim(TunerConstants.BackLeft),
-              new ModuleIOSim(TunerConstants.BackRight));
+              // Sim robot, instantiate physics sim IO implementations
+              new Drive(
+                  new GyroIO() {},
+                  new ModuleIOSim(TunerConstants.FrontLeft),
+                  new ModuleIOSim(TunerConstants.FrontRight),
+                  new ModuleIOSim(TunerConstants.BackLeft),
+                  new ModuleIOSim(TunerConstants.BackRight));
           default ->
-          // Replayed robot, disable IO implementations
-          new Drive(
-              new GyroIO() {},
-              new ModuleIO() {},
-              new ModuleIO() {},
-              new ModuleIO() {},
-              new ModuleIO() {});
+              // Replayed robot, disable IO implementations
+              new Drive(
+                  new GyroIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {});
         };
     return drive;
   }
