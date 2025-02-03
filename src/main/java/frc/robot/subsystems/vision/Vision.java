@@ -93,6 +93,7 @@ public class Vision extends SubsystemBase {
       List<Pose3d> tagPose3ds = new ArrayList<>();
 
       List<PhotonPipelineResult> unprocessedResults = cameras[instanceIndex].getAllUnreadResults();
+      if (unprocessedResults.isEmpty()) return;
       PhotonPipelineResult unprocessedResult =
           unprocessedResults.get(unprocessedResults.size() - 1);
 
