@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.FlipperSubsystem;
 
@@ -19,9 +18,9 @@ public class FlipperBackToReceivingPositionCommand extends Command {
    * @param subsystem The subsystem used by this command.
    */
   public FlipperBackToReceivingPositionCommand(FlipperSubsystem subsystem) {
-    m_subsystem = subsystem; 
+    m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem); 
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -34,9 +33,7 @@ public class FlipperBackToReceivingPositionCommand extends Command {
   @Override
   public void execute() {
     m_subsystem.flipperReadyToReceive();
-  }  
-    
-  
+  }
 
   // Called once the command ends or is interrupted.
   @Override

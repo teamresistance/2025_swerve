@@ -4,8 +4,8 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class ElevatorLowerFirstStageCommand extends Command {
@@ -20,7 +20,7 @@ public class ElevatorLowerFirstStageCommand extends Command {
   public ElevatorLowerFirstStageCommand(ElevatorSubsystem subsystem) {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem); 
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -40,7 +40,7 @@ public class ElevatorLowerFirstStageCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.firstStageSolenoidDown=true;
+    m_subsystem.firstStageSolenoidDown = true;
   }
 
   // Returns true when the command should end.

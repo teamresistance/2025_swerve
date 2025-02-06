@@ -4,18 +4,21 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.*;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class ElevatorSubsystem extends SubsystemBase {
-  Solenoid ElevatorPusher1= new Solenoid(Constants.SolenoidModuleType, Constants.ElevatorSolenoid1Channel);
-  Solenoid ElevatorPusher2= new Solenoid(Constants.SolenoidModuleType, Constants.ElevatorSolenoid2Channel);
+  Solenoid ElevatorPusher1 =
+      new Solenoid(Constants.SolenoidModuleType, Constants.ElevatorSolenoid1Channel);
+  Solenoid ElevatorPusher2 =
+      new Solenoid(Constants.SolenoidModuleType, Constants.ElevatorSolenoid2Channel);
   public boolean firstStageSolenoidUp = false;
   public boolean secondStageSolenoidUp = false;
-  public boolean firstStageSolenoidDown=false;
-  public boolean secondStageSolenoidDown=false;
+  public boolean firstStageSolenoidDown = false;
+  public boolean secondStageSolenoidDown = false;
+
   /** Creates a new ExampleSubsystem. */
   public ElevatorSubsystem() {}
 
@@ -28,23 +31,24 @@ public class ElevatorSubsystem extends SubsystemBase {
     ElevatorPusher1.setPulseDuration(1.0); // Assuming x is 1.0, replace with the correct value
     ElevatorPusher1.set(true);
     firstStageSolenoidUp = true;
-
   }
+
   public void raiseSecondStage() {
     raiseFirstStage();
     ElevatorPusher2.setPulseDuration(1.0); // Assuming x is 1.0, replace with the correct value
-    secondStageSolenoidUp=true;
+    secondStageSolenoidUp = true;
   }
+
   public void lowerSecondStage() {
     ElevatorPusher2.set(false);
-    firstStageSolenoidDown=true;
+    firstStageSolenoidDown = true;
     lowerFirstStage();
   }
+
   public void lowerFirstStage() {
     ElevatorPusher1.set(false);
-    secondStageSolenoidDown=true;
+    secondStageSolenoidDown = true;
   }
-  
 
   @Override
   public void periodic() {

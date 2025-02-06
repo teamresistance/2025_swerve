@@ -18,8 +18,7 @@ public class ElevatorLowestCommandGroup extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ElevatorLowerFirstStageCommand(subsystem),
-      new ElevatorLowerSecondStageCommand(subsystem)
-    );
+        new ElevatorLowerFirstStageCommand(subsystem),
+        new ElevatorLowerSecondStageCommand(subsystem));
   }
 }

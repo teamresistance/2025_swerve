@@ -33,7 +33,6 @@ import frc.robot.commandgroups.ScoreCommandGroup;
 import frc.robot.commands.ChooseReefCmd;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FlipperReceivingCommand;
-import frc.robot.commands.FlipperScoringCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.FlipperSubsystem;
@@ -147,52 +146,48 @@ public class RobotContainer {
     //
     //    Experimental Physical Reef Interface
     //
-    //Physical reef interface refers to a separate "joystick" which is a few buttons, similar to a macro keyboard
-    if (UseExperimentalPhysicalReefInterface){
-        final Joystick physicalInterface = new Joystick(1);
-        final PhysicalReefInterfaceSubsystem m_PhysicalReefSubsystem = new PhysicalReefInterfaceSubsystem();
-        // execute
-        new JoystickButton(physicalInterface, 1)
-            .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, -1, -1, true));
-        // level
-        new JoystickButton(physicalInterface, 3)
-            .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, 0, -1, -1, false));
-        new JoystickButton(physicalInterface, 4)
-            .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, 2, -1, -1, false));
-        new JoystickButton(physicalInterface, 6)
-            .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, 3, -1, -1, false));
-        // pos
-        new JoystickButton(physicalInterface, 7)
-            .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 0, -1, false));
-        new JoystickButton(physicalInterface, 8)
-            .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 1, -1, false));
-        new JoystickButton(physicalInterface, 9)
-            .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 2, -1, false));
-        new JoystickButton(physicalInterface, 10)
-            .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 3, -1, false));
-        new JoystickButton(physicalInterface, 11)
-            .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 4, -1, false));
-        new JoystickButton(physicalInterface, 12)
-            .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 5, -1, false));
-        // rightleft
-        new JoystickButton(physicalInterface, 5)
-            .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, -1, 1, false));
+    // Physical reef interface refers to a separate "joystick" which is a few buttons, similar to a
+    // macro keyboard
+    if (UseExperimentalPhysicalReefInterface) {
+      final Joystick physicalInterface = new Joystick(1);
+      final PhysicalReefInterfaceSubsystem m_PhysicalReefSubsystem =
+          new PhysicalReefInterfaceSubsystem();
+      // execute
+      new JoystickButton(physicalInterface, 1)
+          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, -1, -1, true));
+      // level
+      new JoystickButton(physicalInterface, 3)
+          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, 0, -1, -1, false));
+      new JoystickButton(physicalInterface, 4)
+          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, 2, -1, -1, false));
+      new JoystickButton(physicalInterface, 6)
+          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, 3, -1, -1, false));
+      // pos
+      new JoystickButton(physicalInterface, 7)
+          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 0, -1, false));
+      new JoystickButton(physicalInterface, 8)
+          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 1, -1, false));
+      new JoystickButton(physicalInterface, 9)
+          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 2, -1, false));
+      new JoystickButton(physicalInterface, 10)
+          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 3, -1, false));
+      new JoystickButton(physicalInterface, 11)
+          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 4, -1, false));
+      new JoystickButton(physicalInterface, 12)
+          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 5, -1, false));
+      // rightleft
+      new JoystickButton(physicalInterface, 5)
+          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, -1, 1, false));
     }
 
     //
     //    Standard Joystick Bindings
     //
-    new JoystickButton(Joystick1, 1)
-        .onTrue(new ScoreCommandGroup(m_flipperSubsystem));
-    new JoystickButton(Joystick1, 5)
-        .onTrue(new FlipperReceivingCommand(m_flipperSubsystem));
-    new JoystickButton(Joystick1, 3)
-        .onTrue(new ElevatorLowestCommandGroup(m_elevatorSubsystem));
-    new JoystickButton(Joystick1, 4)
-        .onTrue(new ElevatorMiddleCommandGroup(m_elevatorSubsystem));
-    new JoystickButton(Joystick1, 6)
-        .onTrue(new ElevatorHighestCommandGroup(m_elevatorSubsystem));
-    
+    new JoystickButton(Joystick1, 1).onTrue(new ScoreCommandGroup(m_flipperSubsystem));
+    new JoystickButton(Joystick1, 5).onTrue(new FlipperReceivingCommand(m_flipperSubsystem));
+    new JoystickButton(Joystick1, 3).onTrue(new ElevatorLowestCommandGroup(m_elevatorSubsystem));
+    new JoystickButton(Joystick1, 4).onTrue(new ElevatorMiddleCommandGroup(m_elevatorSubsystem));
+    new JoystickButton(Joystick1, 6).onTrue(new ElevatorHighestCommandGroup(m_elevatorSubsystem));
 
     //
     //    Drive Commands

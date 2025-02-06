@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.FlipperSubsystem;
 
@@ -19,9 +18,9 @@ public class FlipperScoringCommand extends Command {
    * @param subsystem The subsystem used by this command.
    */
   public FlipperScoringCommand(FlipperSubsystem subsystem) {
-    m_subsystem = subsystem; 
+    m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem); 
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -36,9 +35,7 @@ public class FlipperScoringCommand extends Command {
     m_subsystem.flipperReadyToScore();
     m_subsystem.letGo();
     m_subsystem.score();
-  }  
-    
-  
+  }
 
   // Called once the command ends or is interrupted.
   @Override

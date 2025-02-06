@@ -17,7 +17,8 @@ public class ChooseReefCmd extends Command {
   private int rl;
   private boolean exec;
 
-  public ChooseReefCmd(PhysicalReefInterfaceSubsystem subsystem, int level, int pos, int rl, boolean exec) {
+  public ChooseReefCmd(
+      PhysicalReefInterfaceSubsystem subsystem, int level, int pos, int rl, boolean exec) {
     this.subsystem = subsystem;
     if (level != -1) {
       this.level = level;

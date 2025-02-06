@@ -5,8 +5,8 @@
 package frc.robot.commandgroups;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.ElevatorRaiseFirstStageCommand;
 import frc.robot.commands.ElevatorLowerSecondStageCommand;
+import frc.robot.commands.ElevatorRaiseFirstStageCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -18,8 +18,7 @@ public class ElevatorMiddleCommandGroup extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ElevatorRaiseFirstStageCommand(subsystem),
-      new ElevatorLowerSecondStageCommand(subsystem)
-    );
+        new ElevatorRaiseFirstStageCommand(subsystem),
+        new ElevatorLowerSecondStageCommand(subsystem));
   }
 }
