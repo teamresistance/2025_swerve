@@ -10,8 +10,8 @@ import frc.robot.subsystems.PhysicalReefSubsystem;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ChooseReefCmd extends Command {
   /** Creates a new ChooseReefCmd. */
-
   private PhysicalReefSubsystem subsystem;
+
   private int level;
   private int pos;
   private int rl;
@@ -19,9 +19,15 @@ public class ChooseReefCmd extends Command {
 
   public ChooseReefCmd(PhysicalReefSubsystem subsystem, int level, int pos, int rl, boolean exec) {
     this.subsystem = subsystem;
-    if (level!=-1) { this.level = level; }
-    if (level!=-1) { this.pos = pos; }
-    if (level!=-1) { this.rl = rl; }
+    if (level != -1) {
+      this.level = level;
+    }
+    if (level != -1) {
+      this.pos = pos;
+    }
+    if (level != -1) {
+      this.rl = rl;
+    }
     this.exec = exec;
     addRequirements(subsystem);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -34,7 +40,11 @@ public class ChooseReefCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (exec) {subsystem.ChooseReef(level, pos, rl);}}
+    if (exec) {
+      subsystem.ChooseReef(level, pos, rl);
+    }
+  }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
