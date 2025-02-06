@@ -26,9 +26,17 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commandgroups.ElevatorHighestCommandGroup;
+import frc.robot.commandgroups.ElevatorLowestCommandGroup;
+import frc.robot.commandgroups.ElevatorMiddleCommandGroup;
+import frc.robot.commandgroups.ScoreCommandGroup;
 import frc.robot.commands.ChooseReefCmd;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.FlipperReceivingCommand;
+import frc.robot.commands.FlipperScoringCommand;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.FlipperSubsystem;
 import frc.robot.subsystems.PhysicalReefInterfaceSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -50,6 +58,8 @@ public class RobotContainer {
 
   // Subsystems
   private final Drive drive;
+  private final FlipperSubsystem m_flipperSubsystem = new FlipperSubsystem();
+  private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
 
   final double DEADZONE = 0.1;
 
@@ -60,6 +70,9 @@ public class RobotContainer {
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
+  private final Joystick Joystick1 = new Joystick(0);
+  private final Joystick Joystick2 = new Joystick(1);
+  private final Joystick CoJoystick = new Joystick(2);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -131,6 +144,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    //
+    //    Experimental Physical Reef Interface
+    //
     //Physical reef interface refers to a separate "joystick" which is a few buttons, similar to a macro keyboard
     if (UseExperimentalPhysicalReefInterface){
         final Joystick physicalInterface = new Joystick(1);
@@ -163,6 +179,24 @@ public class RobotContainer {
             .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, -1, 1, false));
     }
 
+    //
+    //    Standard Joystick Bindings
+    //
+    new JoystickButton(Joystick1, 1)
+        .onTrue(new ScoreCommandGroup(m_flipperSubsystem));
+    new JoystickButton(Joystick1, 5)
+        .onTrue(new FlipperReceivingCommand(m_flipperSubsystem));
+    new JoystickButton(Joystick1, 3)
+        .onTrue(new ElevatorLowestCommandGroup(m_elevatorSubsystem));
+    new JoystickButton(Joystick1, 4)
+        .onTrue(new ElevatorMiddleCommandGroup(m_elevatorSubsystem));
+    new JoystickButton(Joystick1, 6)
+        .onTrue(new ElevatorHighestCommandGroup(m_elevatorSubsystem));
+    
+
+    //
+    //    Drive Commands
+    //
     // Default command, normal field-relative drive
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
