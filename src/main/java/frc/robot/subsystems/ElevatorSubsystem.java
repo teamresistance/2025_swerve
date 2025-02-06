@@ -5,13 +5,13 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 
 public class ElevatorSubsystem extends SubsystemBase {
-  Solenoid ElevatorPusher2= new Solenoid(PneumaticsModuleType.REVPH, 5);
-  Solenoid ElevatorPusher= new Solenoid(PneumaticsModuleType.REVPH, 1);
+  Solenoid ElevatorPusher1= new Solenoid(Constants.SolenoidModuleType, Constants.ElevatorSolenoid1Channel);
+  Solenoid ElevatorPusher2= new Solenoid(Constants.SolenoidModuleType, Constants.ElevatorSolenoid2Channel);
   public boolean firstStageSolenoidUp = false;
   public boolean secondStageSolenoidUp = false;
   public boolean firstStageSolenoidDown=false;
@@ -25,8 +25,8 @@ public class ElevatorSubsystem extends SubsystemBase {
    * @return the opposite of the value of said boolean state.
    */
   public void raiseFirstStage() {
-    ElevatorPusher.setPulseDuration(1.0); // Assuming x is 1.0, replace with the correct value
-    ElevatorPusher.set(true);
+    ElevatorPusher1.setPulseDuration(1.0); // Assuming x is 1.0, replace with the correct value
+    ElevatorPusher1.set(true);
     firstStageSolenoidUp = true;
 
   }
@@ -41,7 +41,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     lowerFirstStage();
   }
   public void lowerFirstStage() {
-    ElevatorPusher.set(false);
+    ElevatorPusher1.set(false);
     secondStageSolenoidDown=true;
   }
   

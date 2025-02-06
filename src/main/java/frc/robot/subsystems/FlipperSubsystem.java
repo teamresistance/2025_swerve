@@ -4,12 +4,11 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.*;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalSource;
 
 
 public class FlipperSubsystem extends SubsystemBase {
@@ -18,9 +17,9 @@ public class FlipperSubsystem extends SubsystemBase {
   public boolean isGripped = false;
   public boolean hasCoral = false;
 
-  Solenoid gripper = new Solenoid(PneumaticsModuleType.REVPH, 6); //The pneumatics hub channels that we are using are 0, 2, and 5
-  Solenoid flipper= new Solenoid(PneumaticsModuleType.REVPH, 9);
-  Solenoid coralCenterMechanism= new Solenoid(PneumaticsModuleType.REVPH, 1);
+  Solenoid gripper = new Solenoid(Constants.SolenoidModuleType, Constants.GripperSolenoidChannel); //The pneumatics hub channels that we are using are 0, 2, and 5
+  Solenoid flipper= new Solenoid(Constants.SolenoidModuleType, Constants.FlipperSolenoidChannel);
+  Solenoid coralCenterMechanism= new Solenoid(Constants.SolenoidModuleType, 1);
   DigitalInput CoralDetector= new DigitalInput(0);
   /** Creates a new ExampleSubsystem. */
   public FlipperSubsystem() {}
