@@ -6,11 +6,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.*;
-import frc.robot.Constants.RobotConstants;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import com.ctre.phoenix.sensors.PigeonIMU;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalSource;
 
 
@@ -18,12 +16,12 @@ public class FlipperSubsystem extends SubsystemBase {
   public boolean isInScoringPosition=false;
   public boolean isInReceivingPosition= false;
   public boolean isGripped = false;
-  public boolean hasCoral= false;
+  public boolean hasCoral = false;
+
   Solenoid gripper = new Solenoid(PneumaticsModuleType.REVPH, 6); //The pneumatics hub channels that we are using are 0, 2, and 5
   Solenoid flipper= new Solenoid(PneumaticsModuleType.REVPH, 9);
   Solenoid coralCenterMechanism= new Solenoid(PneumaticsModuleType.REVPH, 1);
   DigitalInput CoralDetector= new DigitalInput(0);
-  public boolean hasCoral=CoralDetector.get();
   /** Creates a new ExampleSubsystem. */
   public FlipperSubsystem() {}
 
@@ -33,17 +31,19 @@ public class FlipperSubsystem extends SubsystemBase {
    * @return the opposite of the value of said boolean state.
    */
   public void grip() {
-    coralCenterMechanism.setPulseDuration(1.0);
     coralCenterMechanism.set(true);
-    time.sleep(0.5);
-    gripper.setPulseDuration(1.0);
-    hasCoral = coralDetector.get();
+    
+    try {
+      Thread.sleep(500);
+    }
+    catch (InterruptedException e) {}
+
+    hasCoral = CoralDetector.get();
     gripper.set(hasCoral);
     isGripped = gripper.get();
    
   }
   public void letGo(){
-    gripper.setPulseDuration(1.0);
     gripper.set(false);
   }
   ///public void clawSpinner(){
@@ -51,12 +51,10 @@ public class FlipperSubsystem extends SubsystemBase {
    /// rotator.set(ControlMode.position, motorTurnAmount);
   //}
   public void flipperReadyToScore() {
-    flipper.setPulseDuration(1.0);
     flipper.set(true);
     isInScoringPosition = true;
   }
   public void flipperReadyToReceive(){
-    flipper.setPulseDuration(1.0);
     flipper.set(false);
     isInReceivingPosition = true;
   }
@@ -65,12 +63,6 @@ public class FlipperSubsystem extends SubsystemBase {
   ///}
 
   public void score() {
-    try {
-      Thread.sleep(RobotConstants.kScoreTimeoutSeconds);
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-    }
-
     hasCoral = false;
   }
 
@@ -78,7 +70,7 @@ public class FlipperSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putBoolean("Has Coral?", hasCoral);
     SmartDashboard.putBoolean("Is Gripped?", isGripped);
-    SmartDashboard.putBoolean("In Scoring Position?", inScoringPosition);
+    SmartDashboard.putBoolean("In Scoring Position?", isInScoringPosition);
   }
 
   @Override

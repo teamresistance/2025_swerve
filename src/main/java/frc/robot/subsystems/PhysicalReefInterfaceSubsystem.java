@@ -6,9 +6,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class PhysicalReefSubsystem extends SubsystemBase {
+public class PhysicalReefInterfaceSubsystem extends SubsystemBase {
   /** Creates a new PhysicalReefSubsystem. */
-  public PhysicalReefSubsystem() {}
+  public PhysicalReefInterfaceSubsystem() {}
 
   private int level;
   private int pos;

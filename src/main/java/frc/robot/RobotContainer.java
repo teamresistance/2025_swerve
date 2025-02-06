@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ChooseReefCmd;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.PhysicalReefSubsystem;
+import frc.robot.subsystems.PhysicalReefInterfaceSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -60,7 +60,7 @@ public class RobotContainer {
 
   // Reef physical interface
   private final Joystick physicalInterface = new Joystick(1);
-  private final PhysicalReefSubsystem m_PhysicalReefSubsystem = new PhysicalReefSubsystem();
+  private final PhysicalReefInterfaceSubsystem m_PhysicalReefSubsystem = new PhysicalReefInterfaceSubsystem();
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
