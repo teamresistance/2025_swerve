@@ -12,21 +12,21 @@ public class ChooseReefCmd extends Command {
   /** Creates a new ChooseReefCmd. */
   private PhysicalReefInterfaceSubsystem subsystem;
 
-  private int level;
-  private int pos;
-  private int rl;
+  private int level = -1;
+  private int pos = -1;
+  private int rl = -1;
   private boolean exec;
 
   public ChooseReefCmd(
       PhysicalReefInterfaceSubsystem subsystem, int level, int pos, int rl, boolean exec) {
     this.subsystem = subsystem;
-    if (level != -1) {
+    if (level > -1) {
       this.level = level;
     }
-    if (level != -1) {
+    if (pos > -1) {
       this.pos = pos;
     }
-    if (level != -1) {
+    if (rl > -1) {
       this.rl = rl;
     }
     this.exec = exec;
@@ -42,7 +42,9 @@ public class ChooseReefCmd extends Command {
   @Override
   public void execute() {
     if (exec) {
-      subsystem.ChooseReef(level, pos, rl);
+      subsystem.ChooseReef();
+    } else {
+      subsystem.ChooseVars(level, pos, rl);
     }
   }
 

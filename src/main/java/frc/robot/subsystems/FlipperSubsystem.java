@@ -23,7 +23,8 @@ public class FlipperSubsystem extends SubsystemBase {
               .GripperSolenoidChannel); // The pneumatics hub channels that we are using are 0, 2,
   // and 5
   Solenoid flipper = new Solenoid(Constants.SolenoidModuleType, Constants.FlipperSolenoidChannel);
-  Solenoid coralCenterMechanism = new Solenoid(Constants.SolenoidModuleType, 1);
+  Solenoid coralCenterMechanism =
+      new Solenoid(Constants.SolenoidModuleType, Constants.CentererSolenoidChannel);
   DigitalInput CoralDetector = new DigitalInput(0);
 
   /** Creates a new ExampleSubsystem. */

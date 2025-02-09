@@ -25,6 +25,7 @@ public final class Constants {
 
   // Hardware Constants
   public static final PneumaticsModuleType SolenoidModuleType = PneumaticsModuleType.REVPH;
+  public static final int CentererSolenoidChannel = 0;
   public static final int ElevatorSolenoid1Channel = 1;
   public static final int ElevatorSolenoid2Channel = 5;
   public static final int GripperSolenoidChannel = 6;
