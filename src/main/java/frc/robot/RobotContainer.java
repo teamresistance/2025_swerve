@@ -34,6 +34,8 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+import frc.robot.util.IO;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -144,6 +146,7 @@ public class RobotContainer {
 
     // Switch to X pattern when X button is pressed
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+<<<<<<< Updated upstream
 
     // Reset gyro to 0° when B button is pressed
     controller
@@ -167,6 +170,24 @@ public class RobotContainer {
     controller
         .rightTrigger()
         .whileTrue(DriveCommands.goTo2DPos(drive, 1.0, 2.0, 0.0)); // Example values
+=======
+    //		controller
+    //			.b()
+    //			.onTrue(
+    //				Commands.runOnce(
+    //						() ->
+    //							drive.setPose(
+    //								new Pose2d(drive.getPose().getTranslation(), new Rotation2d())), // reset gyro
+    //						drive)
+    //					.ignoringDisable(true));
+    //    controller
+    //        .a()
+    //        .whileTrue(
+    //            Commands.startEnd(
+    //                () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop,
+    // flywheel));
+
+>>>>>>> Stashed changes
   }
 
   /**
