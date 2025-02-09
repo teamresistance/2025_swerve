@@ -34,8 +34,6 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-import frc.robot.util.IO;
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -47,8 +45,6 @@ import frc.robot.util.IO;
 //   888`88b.    888   888  888   888 888   888   888   888          888   888  888   888    888    .oP"888   888   888   888  888ooo888  888     
 //   888  `88b.  888   888  888   888 888   888   888 . `88b    ooo  888   888  888   888    888 . d8(  888   888   888   888  888    .o  888     
 //  o888o  o888o `Y8bod8P'  `Y8bod8P' `Y8bod8P'   "888"  `Y8bood8P'  `Y8bod8P' o888o o888o   "888" `Y888""8o o888o o888o o888o `Y8bod8P' d888b    
-
-package frc.robot;
 
 // Constants
 import frc.robot.Constants.OperatorConstants;
@@ -170,6 +166,7 @@ public class RobotContainer {
                 new ModuleIO() {});
         break;
     }
+  }
     private final OperatorInput m_operatorInput = new OperatorInput(1);
 
     private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
@@ -204,7 +201,6 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-  }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -312,9 +308,6 @@ public class RobotContainer {
     //            Commands.startEnd(
     //                () -> flywheel.runVelocity(flywheelSpeedInput.get()), flywheel::stop,
     // flywheel));
-
-  }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
