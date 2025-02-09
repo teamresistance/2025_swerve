@@ -54,8 +54,8 @@ public class RobotContainer {
   // Controller
   // private final CommandXboxController controller = new CommandXboxController(0);
   private final Joystick Joystick1 = new Joystick(0);
-  // private final Joystick Joystick2 = new Joystick(1);
-  // private final Joystick CoJoystick = new Joystick(2);
+  private final Joystick Joystick2 = new Joystick(1);
+  private final Joystick CoJoystick = new Joystick(2);
 
   // Dashboard inputs
   private LoggedDashboardChooser<Command> autoChooser;
@@ -78,38 +78,34 @@ public class RobotContainer {
     //
     // Physical reef interface refers to a separate "joystick" which is a few buttons, similar to a
     // macro keyboard
-    final boolean UseExperimentalPhyscialReefInterface = true;
-    if (UseExperimentalPhyscialReefInterface) {
-      final Joystick physicalInterface = new Joystick(4);
-      final PhysicalReefInterfaceSubsystem m_PhysicalReefSubsystem =
-          new PhysicalReefInterfaceSubsystem();
-      // execute
-      new JoystickButton(physicalInterface, 1)
-          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, -1, -1, true));
-      // level
-      new JoystickButton(physicalInterface, 3)
-          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, 0, -1, -1, false));
-      new JoystickButton(physicalInterface, 4)
-          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, 2, -1, -1, false));
-      new JoystickButton(physicalInterface, 6)
-          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, 3, -1, -1, false));
-      // pos
-      new JoystickButton(physicalInterface, 7)
-          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 0, -1, false));
-      new JoystickButton(physicalInterface, 8)
-          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 1, -1, false));
-      new JoystickButton(physicalInterface, 9)
-          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 2, -1, false));
-      new JoystickButton(physicalInterface, 10)
-          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 3, -1, false));
-      new JoystickButton(physicalInterface, 11)
-          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 4, -1, false));
-      new JoystickButton(physicalInterface, 12)
-          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 5, -1, false));
-      // rightleft
-      new JoystickButton(physicalInterface, 5)
-          .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, -1, 1, false));
-    }
+    final PhysicalReefInterfaceSubsystem m_PhysicalReefSubsystem =
+        new PhysicalReefInterfaceSubsystem();
+    // execute
+    new JoystickButton(CoJoystick, 1)
+        .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, -1, -1, true));
+    // level
+    new JoystickButton(CoJoystick, 3)
+        .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, 0, -1, -1, false));
+    new JoystickButton(CoJoystick, 4)
+        .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, 2, -1, -1, false));
+    new JoystickButton(CoJoystick, 6)
+        .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, 3, -1, -1, false));
+    // pos
+    new JoystickButton(CoJoystick, 7)
+        .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 0, -1, false));
+    new JoystickButton(CoJoystick, 8)
+        .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 1, -1, false));
+    new JoystickButton(CoJoystick, 9)
+        .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 2, -1, false));
+    new JoystickButton(CoJoystick, 10)
+        .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 3, -1, false));
+    new JoystickButton(CoJoystick, 11)
+        .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 4, -1, false));
+    new JoystickButton(CoJoystick, 12)
+        .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, 5, -1, false));
+    // rightleft
+    new JoystickButton(CoJoystick, 5)
+        .onTrue(new ChooseReefCmd(m_PhysicalReefSubsystem, -1, -1, 1, false));
 
     //
     //    Standard Joystick Bindings

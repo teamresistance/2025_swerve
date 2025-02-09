@@ -17,7 +17,10 @@ public class PhysicalReefInterfaceSubsystem extends SubsystemBase {
 
   public void ChooseReef() {
     SmartDashboard.putString(
-        "Last Selection", "Level = " + level + ", Position = " + pos + ", Left/Right = " + rl);
+        "Last Selection", "Level = " + level + ", Position = " + pos + ", L/R = " + rl);
+    level = 0;
+    pos = 0;
+    rl = false;
   }
 
   // Add code to make the robot go to X location
