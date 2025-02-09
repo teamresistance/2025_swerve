@@ -16,6 +16,7 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
   /** Creates a new Level1CommandGroup. */
   public ScoreCommandGroup(FlipperSubsystem subsystem) {
     addCommands(
-        new FlipperScoringCommand(subsystem), new FlipperBackToReceivingPositionCommand(subsystem));
+        new FlipperScoringCommand(subsystem),
+        new FlipperBackToReceivingPositionCommand(subsystem));
   }
 }
